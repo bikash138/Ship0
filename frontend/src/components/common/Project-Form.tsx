@@ -1,0 +1,145 @@
+"use client";
+
+import { useState } from "react";
+import { CaretDownIcon } from "@phosphor-icons/react";
+import TextareaAutosize from "react-textarea-autosize";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { ArrowUpIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const ProjectFormSchema = z.object({
+  content: z
+    .string()
+    .min(4, { message: "Content must be at least 4 characters long" })
+    .max(2000, { message: "Content must be at most 2000 characters long" }),
+});
+
+const ProjectForm = () => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const form = useForm<z.infer<typeof ProjectFormSchema>>({
+    resolver: zodResolver(ProjectFormSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
+
+  const onsubmit = (data: z.infer<typeof ProjectFormSchema>) => {
+    console.log(data);
+  };
+
+  return (
+    <div
+      className={`rounded-2xl transition-colors duration-200 border ${
+        isFocused ? "border-white/50" : "border-white/20"
+      } bg-card/50 backdrop-blur-sm p-6`}
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onsubmit)}>
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <TextareaAutosize
+                    {...field}
+                    placeholder="Ask s0 to build..."
+                    className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base"
+                    minRows={2}
+                    maxRows={8}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        form.handleSubmit(onsubmit)(e);
+                      }
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+                <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/20">
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      className="p-2 hover:bg-card rounded-lg transition-colors text-foreground/60 hover:text-foreground"
+                    >
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="p-2 hover:bg-card rounded-lg transition-colors text-foreground/60 hover:text-foreground"
+                    >
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"
+                        />
+                      </svg>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="flex items-center gap-2 px-3 py-2 hover:bg-card rounded-lg transition-colors text-foreground/80 hover:text-foreground text-sm font-medium"
+                    >
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 3v1m0 16v1m9-9h-1m-16 0H1m15.364 1.636l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                        />
+                      </svg>
+                      s0 Agent
+                      <CaretDownIcon className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <Button type="submit" size="icon" className="rounded-xl">
+                    <ArrowUpIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+export default ProjectForm;
