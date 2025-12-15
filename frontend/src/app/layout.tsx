@@ -12,6 +12,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/home/Header";
 import { dark } from "@clerk/themes";
+import QueryProvider from "@/components/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,11 +40,13 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Header />
-          <main className="mx-auto max-w-5xl w-full px-4 sm:px-6 lg:px-8 flex-1">
-            {children}
-          </main>
-          <Toaster />
+          <QueryProvider>
+            <Header />
+            <main className="mx-auto max-w-5xl w-full px-4 sm:px-6 lg:px-8 flex-1">
+              {children}
+            </main>
+            <Toaster />
+          </QueryProvider>
         </body>
       </html>
     </ClerkProvider>

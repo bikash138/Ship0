@@ -6,6 +6,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Spinner } from "@/components/ui/spinner"
+
 import {
   Form,
   FormField,
@@ -15,6 +17,8 @@ import {
 } from "@/components/ui/form";
 import { ArrowUpIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCreateProject } from "@/hooks/use-project";
+import { toast } from "sonner";
 
 const ProjectFormSchema = z.object({
   content: z
@@ -25,16 +29,30 @@ const ProjectFormSchema = z.object({
 
 const ProjectForm = () => {
   const [isFocused, setIsFocused] = useState(false);
+  const {mutateAsync, isPending} = useCreateProject()
 
   const form = useForm<z.infer<typeof ProjectFormSchema>>({
     resolver: zodResolver(ProjectFormSchema),
     defaultValues: {
       content: "",
     },
+    mode: "onChange"
   });
 
-  const onsubmit = (data: z.infer<typeof ProjectFormSchema>) => {
-    console.log(data);
+  const onsubmit = async (data: z.infer<typeof ProjectFormSchema>) => {
+    try{
+      const res = await mutateAsync(data.content, {
+        onSuccess: () => {
+          form.reset();
+        },
+      });
+      toast.success("Project Created Success");
+      // router.push(`/projects/${res.}`)
+      console.log(res);
+    }catch(error){
+      toast.error('Project Creation Failed')
+      console.log("Project Creation Failed: ", error)
+    }
   };
 
   return (
@@ -53,6 +71,7 @@ const ProjectForm = () => {
                 <FormControl>
                   <TextareaAutosize
                     {...field}
+                    disabled={isPending}
                     placeholder="Ask s0 to build..."
                     className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base"
                     minRows={2}
@@ -129,8 +148,14 @@ const ProjectForm = () => {
                       <CaretDownIcon className="h-3 w-3" />
                     </button>
                   </div>
-                  <Button type="submit" size="icon" className="rounded-xl">
-                    <ArrowUpIcon className="h-4 w-4" />
+                  <Button type="submit" size="icon" className="rounded-xl" disabled={!form.formState.isValid || isPending}>
+                    {
+                      isPending ? (
+                        <Spinner/>
+                      ) : (
+                        <ArrowUpIcon className="h-4 w-4"/>
+                      )
+                    }
                   </Button>
                 </div>
               </FormItem>
