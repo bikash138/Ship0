@@ -12,6 +12,50 @@ model User{
   name String
   clerkId String @unique
   email String @unique
+  project Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project{
+  id String @id @default(uuid())
+  title String
+  userId String
+  user User @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  messages Message[]
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+enum MessageType {
+  RESULT
+  ERROR
+}
+
+model Message {
+  id String @id @default(uuid())
+  content String
+  role MessageRole
+  type MessageType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  projectId String
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fragments Fragment?
+}
+
+model Fragment {
+  id String @id @default(uuid())
+  messsageId String @unique
+  message Message @relation(fields: [messsageId], references: [id], onDelete: Cascade)
+  sandboxUrl String
+  title String
+  files Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
