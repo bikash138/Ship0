@@ -40,7 +40,7 @@ projectRoute.post("/create-project", async (req, res) => {
       newProject,
     });
   } catch (error) {
-    console.log("SOmething went wrong while creating Project", error);
+    console.log("Something went wrong while creating Project", error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

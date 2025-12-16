@@ -5,7 +5,8 @@ import { clerkClient, requireAuth, getAuth } from "@clerk/express";
 import { clerkWebhookRoute } from "./routes/clerk-webhook";
 import { serve } from 'inngest/express';
 import { inngest, functions } from "./inngest/functions";
-import { projectRoute } from './routes/project';
+import { projectRoute } from './routes/project-routes/project';
+import { messageRoute } from './routes/project-routes/messages';
 
 const app = express()
 app.use(clerkMiddleware());
@@ -20,6 +21,7 @@ app.get('/', (req,res)=>{
 })
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/v1/projects", requireAuth(), projectRoute)
+app.use("/api/v1/messages", requireAuth(), messageRoute)
 
 app.listen(PORT, ()=>{
     console.log(`Ship0 backend in up at PORT: ${PORT}`)
