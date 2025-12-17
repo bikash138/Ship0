@@ -38,11 +38,11 @@ export default function RootLayout({
     <ClerkProvider appearance={{ theme: dark }}>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen overflow-hidden`}
         >
           <QueryProvider>
             <Header />
-            <main className="mx-auto max-w-5xl w-full px-4 sm:px-6 lg:px-8 flex-1">
+            <main className="flex-1 overflow-hidden h-full flex flex-col">
               {children}
             </main>
             <Toaster />

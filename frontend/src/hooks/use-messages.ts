@@ -51,10 +51,10 @@ export const useGetMessages = (projectId: string) => {
 };
 
 export const useCreateMessage = (projectId: string) => {
-  const queryClient = useQueryClient()
-  const {getToken} = useAuth()
+  const queryClient = useQueryClient();
+  const { getToken } = useAuth();
   return useMutation({
-    mutationFn: async (message) => {
+    mutationFn: async (message: { text: string }) => {
       const token = await getToken();
       const response = await axios.post(
         `${URI}/messages/create-message`,
@@ -73,4 +73,4 @@ export const useCreateMessage = (projectId: string) => {
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["messages", projectId] }),
   });
-}
+};

@@ -6,7 +6,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Spinner } from "@/components/ui/spinner"
+import { Spinner } from "@/components/ui/spinner";
 
 import {
   Form,
@@ -18,40 +18,59 @@ import {
 import { ArrowUpIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCreateProject } from "@/hooks/use-project";
+import { useCreateMessage } from "@/hooks/use-messages";
 import { toast } from "sonner";
 
 const ProjectFormSchema = z.object({
   content: z
     .string()
-    .min(4, { message: "Content must be at least 4 characters long" })
+    .min(4, { message: "Message cannot be empty" })
     .max(2000, { message: "Content must be at most 2000 characters long" }),
 });
 
-const ProjectForm = () => {
+const ProjectForm = ({ projectId }: { projectId?: string }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const {mutateAsync, isPending} = useCreateProject()
+  const createProjectMutation = useCreateProject();
+  const createMessageMutation = useCreateMessage(projectId || "");
+
+  const isChatMode = !!projectId;
+
+  const isPending = isChatMode
+    ? createMessageMutation.isPending
+    : createProjectMutation.isPending;
 
   const form = useForm<z.infer<typeof ProjectFormSchema>>({
     resolver: zodResolver(ProjectFormSchema),
     defaultValues: {
       content: "",
     },
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const onsubmit = async (data: z.infer<typeof ProjectFormSchema>) => {
-    try{
-      const res = await mutateAsync(data.content, {
-        onSuccess: () => {
-          form.reset();
-        },
-      });
-      toast.success("Project Created Success");
-      // router.push(`/projects/${res.}`)
-      console.log(res);
-    }catch(error){
-      toast.error('Project Creation Failed')
-      console.log("Project Creation Failed: ", error)
+    try {
+      if (isChatMode) {
+        await createMessageMutation.mutateAsync(
+          { text: data.content },
+          {
+            onSuccess: () => {
+              form.reset();
+            },
+          }
+        );
+      } else {
+        await createProjectMutation.mutateAsync(data.content, {
+          onSuccess: () => {
+            form.reset();
+          },
+        });
+        toast.success("Project Created Success");
+      }
+    } catch (error) {
+      toast.error(
+        isChatMode ? "Failed to send message" : "Project Creation Failed"
+      );
+      console.log("Error: ", error);
     }
   };
 
@@ -59,7 +78,7 @@ const ProjectForm = () => {
     <div
       className={`rounded-2xl transition-colors duration-200 border ${
         isFocused ? "border-white/50" : "border-white/20"
-      } bg-card/50 backdrop-blur-sm p-6`}
+      } bg-zinc-900 backdrop-blur-sm p-6`}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onsubmit)}>
@@ -73,8 +92,8 @@ const ProjectForm = () => {
                     {...field}
                     disabled={isPending}
                     placeholder="Ask s0 to build..."
-                    className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base"
-                    minRows={2}
+                    className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base resize-none"
+                    minRows={1}
                     maxRows={8}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
@@ -86,9 +105,9 @@ const ProjectForm = () => {
                     }}
                   />
                 </FormControl>
-                <FormMessage />
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/20">
-                  <div className="flex items-center gap-4">
+
+                <div className="flex items-center justify-between mt-2 pt-4 border-t border-white/20">
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
                       className="p-2 hover:bg-card rounded-lg transition-colors text-foreground/60 hover:text-foreground"
@@ -104,25 +123,6 @@ const ProjectForm = () => {
                           strokeLinejoin="round"
                           strokeWidth={2}
                           d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="p-2 hover:bg-card rounded-lg transition-colors text-foreground/60 hover:text-foreground"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"
                         />
                       </svg>
                     </button>
@@ -148,14 +148,17 @@ const ProjectForm = () => {
                       <CaretDownIcon className="h-3 w-3" />
                     </button>
                   </div>
-                  <Button type="submit" size="icon" className="rounded-xl" disabled={!form.formState.isValid || isPending}>
-                    {
-                      isPending ? (
-                        <Spinner/>
-                      ) : (
-                        <ArrowUpIcon className="h-4 w-4"/>
-                      )
-                    }
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="rounded-xl"
+                    disabled={!form.formState.isValid || isPending}
+                  >
+                    {isPending ? (
+                      <Spinner />
+                    ) : (
+                      <ArrowUpIcon className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </FormItem>
