@@ -1,18 +1,35 @@
 import MessageContainer from "@/components/chat/MessageContainer";
-import ResizableSidebar from "@/components/ResizableSidebar";
+import CodeView from "@/components/code-view/code-view";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import { FragmentProvider } from "@/contexts/fragment-context";
 
 const page = async ({ params }: { params: Promise<{ projectId: string }> }) => {
   const { projectId } = await params;
 
   return (
-    <div className="flex h-full w-full overflow-hidden">
-      <ResizableSidebar>
-        <MessageContainer projectId={projectId} />
-      </ResizableSidebar>
-      <div className="flex-1 p-6">
-        <h1>THis is the project with the id {projectId}</h1>
-      </div>
-    </div>
+    <FragmentProvider>
+      <ResizablePanelGroup
+        orientation="horizontal"
+        className="min-h-[200px] w-full rounded-lg"
+      >
+        <ResizablePanel defaultSize={40} minSize={25} collapsible={false}>
+          <MessageContainer projectId={projectId} />
+        </ResizablePanel>
+        <ResizableHandle withHandle className="border-none bg-transparent" />
+        <ResizablePanel
+          defaultSize={60}
+          minSize={30}
+          collapsible={false}
+          className="pb-2 pr-1"
+        >
+          <CodeView projectId={projectId} />
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </FragmentProvider>
   );
 };
 

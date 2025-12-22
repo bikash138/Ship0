@@ -4,9 +4,12 @@ import { useGetMessages } from "@/hooks/use-messages";
 import { User, Bot } from "lucide-react";
 import ProjectForm from "../common/Project-Form";
 import { useUser } from "@clerk/nextjs";
+import SandboxFragment from "./SandboxFragment";
+import { useFragment } from "@/contexts/fragment-context";
 
 const MessageItem = ({ msg }: { msg: any }) => {
   const { user } = useUser();
+  const { setSelectedFragment } = useFragment();
   const isUser = msg.role === "USER";
   const [isExpanded, setIsExpanded] = useState(false);
   const isLongMessage = isUser && msg.content && msg.content.length > 300;
@@ -39,40 +42,53 @@ const MessageItem = ({ msg }: { msg: any }) => {
       </div>
 
       {/* Message Content */}
-      <div
-        className={`relative max-w-[80%] p-4 rounded-xl text-sm ${
-          isUser
-            ? "bg-zinc-900 text-zinc-100 rounded-tr-none"
-            : "bg-transparent text-zinc-400"
-        }`}
-      >
+      <div className="flex flex-col gap-2 max-w-[80%]">
         <div
-          className={`whitespace-pre-wrap ${
-            isUser && shouldTruncate ? "max-h-[150px] overflow-hidden" : ""
+          className={`relative p-4 rounded-xl text-sm ${
+            isUser
+              ? "bg-zinc-900 text-zinc-100 rounded-tr-none"
+              : "bg-transparent text-zinc-400"
           }`}
-          style={
-            shouldTruncate && isUser
-              ? {
-                  maskImage:
-                    "linear-gradient(to bottom, black 60%, transparent 100%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, black 60%, transparent 100%)",
-                }
-              : undefined
-          }
         >
-          {msg.content}
+          <div
+            className={`whitespace-pre-wrap ${
+              isUser && shouldTruncate ? "max-h-[150px] overflow-hidden" : ""
+            }`}
+            style={
+              shouldTruncate && isUser
+                ? {
+                    maskImage:
+                      "linear-gradient(to bottom, black 60%, transparent 100%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, black 60%, transparent 100%)",
+                  }
+                : undefined
+            }
+          >
+            {msg.content}
+          </div>
+
+          {shouldTruncate && isUser && (
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center z-10">
+              <button
+                onClick={() => setIsExpanded(true)}
+                className={`text-xs px-3 py-1 rounded-full shadow-sm hover:bg-opacity-90 transition-all bg-zinc-900 text-gray-300 hover:text-white cursor-pointer`}
+              >
+                Show more
+              </button>
+            </div>
+          )}
         </div>
 
-        {shouldTruncate && isUser && (
-          <div className="absolute bottom-2 left-0 right-0 flex justify-center z-10">
-            <button
-              onClick={() => setIsExpanded(true)}
-              className={`text-xs px-3 py-1 rounded-full shadow-sm hover:bg-opacity-90 transition-all bg-zinc-900 text-gray-300 hover:text-white cursor-pointer`}
-            >
-              Show more
-            </button>
-          </div>
+        {/* Sandbox Fragment */}
+        {!isUser && msg.fragments && (
+          <SandboxFragment
+            url={msg.fragments.sandboxUrl}
+            title={msg.fragments.title}
+            onClick={() => {
+              setSelectedFragment(msg.fragments);
+            }}
+          />
         )}
       </div>
     </div>
