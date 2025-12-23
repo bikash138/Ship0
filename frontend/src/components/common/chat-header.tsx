@@ -8,10 +8,7 @@ import {
 } from "@clerk/nextjs";
 import { Logo } from "../../assests/logo";
 import { Button } from "../ui/button";
-import { CaretDownIcon } from "@phosphor-icons/react";
-import { XIcon, LinkedinIcon, GithubIcon } from "../../assests/Social-Icons";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useGetProjectById } from "@/hooks/use-project";
 import {
   DropdownMenu,

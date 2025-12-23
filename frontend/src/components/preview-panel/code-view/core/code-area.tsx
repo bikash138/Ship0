@@ -1,0 +1,30 @@
+import { Code } from "lucide-react";
+import { CodeHighlight } from "./code-view";
+
+interface CodeAreaProps {
+  selectedFileContent: string | null;
+  selectedPath: string[];
+}
+
+const CodeArea = ({ selectedFileContent, selectedPath }: CodeAreaProps) => {
+  return (
+    <div className="flex-1 w-full overflow-auto bg-zinc-950/50">
+      {selectedFileContent ? (
+        <CodeHighlight code={selectedFileContent} lang="javascript" />
+      ) : (
+        <div className="flex items-center justify-center h-full text-zinc-500">
+          <div className="text-center">
+            <Code size={48} className="mx-auto mb-4 opacity-50" />
+            <p>
+              {selectedPath.length > 0
+                ? "Loading file content..."
+                : "Select a file to view content"}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CodeArea;

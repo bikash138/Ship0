@@ -1,5 +1,5 @@
-import MessageContainer from "@/components/chat/MessageContainer";
-import CodeView from "@/components/code-view/code-view";
+import MessageContainer from "@/components/chat-panel/message-container";
+import PreviewPanel from "@/components/preview-panel/preview-panel";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -26,7 +26,7 @@ const page = async ({ params }: { params: Promise<{ projectId: string }> }) => {
           collapsible={false}
           className="pb-2 pr-1"
         >
-          <CodeView projectId={projectId} />
+          <PreviewPanel projectId={projectId} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </FragmentProvider>

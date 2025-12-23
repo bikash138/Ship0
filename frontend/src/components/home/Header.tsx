@@ -12,7 +12,7 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import { XIcon, LinkedinIcon, GithubIcon } from "../../assests/Social-Icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChatHeader } from "../chat/ChatHeader";
+import { ChatHeader } from "../common/chat-header";
 
 export function Header() {
   const pathname = usePathname();

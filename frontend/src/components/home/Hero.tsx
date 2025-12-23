@@ -1,4 +1,4 @@
-import ProjectForm from "../common/Project-Form";
+import ProjectForm from "../common/project-form";
 
 export function Hero() {
   return (
@@ -11,7 +11,7 @@ export function Hero() {
 
         {/* Input box with tools */}
         <div className="w-full">
-          <ProjectForm/>
+          <ProjectForm />
         </div>
       </div>
     </main>

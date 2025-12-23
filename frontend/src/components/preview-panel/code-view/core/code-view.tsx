@@ -4,8 +4,7 @@ import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-tsx";
-import "prismjs/components/prism-typescript";
-import "./code-theme.css";
+import "./code-view-theme.css";
 
 interface Props {
   code: string;

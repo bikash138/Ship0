@@ -4,9 +4,11 @@ import axios from "axios";
 
 const URI = "http://localhost:4000/api/v1";
 
-export const prefetchMessage = async (projectId: string) => {
-  const queryClient = useQueryClient();
-  const { getToken } = useAuth();
+export const prefetchMessage = async (
+  projectId: string,
+  queryClient: any,
+  getToken: () => Promise<string | null>
+) => {
   await queryClient.prefetchQuery({
     queryKey: ["messages", projectId],
     queryFn: async () => {

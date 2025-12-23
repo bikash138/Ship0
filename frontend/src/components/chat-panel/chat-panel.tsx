@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
-import MessageContainer from "./MessageContainer";
-import ProjectForm from "../common/Project-Form";
+import MessageContainer from "./message-container";
+import ProjectForm from "../common/project-form";
 
 const ChatPanel = ({ projectId }: { projectId: string }) => {
   return (
