@@ -9,26 +9,27 @@ import {
 import { Logo } from "../../assests/logo";
 import { Button } from "../ui/button";
 import { CaretDownIcon } from "@phosphor-icons/react";
-import { XIcon, LinkedinIcon, GithubIcon } from "../../assests/Social-Icons";
+import { XIcon, LinkedinIcon, GithubIcon } from "@/assests/social-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChatHeader } from "../common/chat-header";
+import { ThemeToggle } from "../ui/theme-toggle";
 
 export function Header() {
   const pathname = usePathname();
-  const isChatPage = pathname?.includes('chat')
-  const projectId = isChatPage? pathname.split('/')[2] : ""
+  const isChatPage = pathname?.includes("chat");
+  const projectId = isChatPage ? pathname.split("/")[2] : "";
 
   return (
     <>
       {isChatPage ? (
-        <ChatHeader projectId={projectId}/>
+        <ChatHeader projectId={projectId} />
       ) : (
-        <header className="sticky top-0 z-50 border-b border-white/20 bg-background/95 backdrop-blur">
-          <div className="relative flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-50 border-white/20 bg-background/95 backdrop-blur">
+          <div className="relative flex items-center justify-between px-4 py-4">
+            <Link href="/">
               <Logo />
-            </div>
+            </Link>
 
             {/* Navigation Links */}
             <SignedOut>
@@ -75,14 +76,17 @@ export function Header() {
                 </Link>
               </div>
 
+              {/* Theme Toggle */}
+              <ThemeToggle />
+
               {/* Authentication Buttons */}
               <SignedOut>
                 <SignInButton>
-                  <Button variant={"outline"}>Sign in</Button>
+                  <Button variant={"default"}>Get Started</Button>
                 </SignInButton>
-                <SignUpButton>
+                {/* <SignUpButton>
                   <Button>Sign Up</Button>
-                </SignUpButton>
+                </SignUpButton> */}
               </SignedOut>
               <SignedIn>
                 <UserButton />

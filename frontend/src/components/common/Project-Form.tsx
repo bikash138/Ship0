@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import TextareaAutosize from "react-textarea-autosize";
@@ -77,8 +76,8 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
   return (
     <div
       className={`rounded-2xl transition-colors duration-200 border ${
-        isFocused ? "border-white/50" : "border-white/20"
-      } bg-zinc-900 backdrop-blur-sm p-6`}
+        isFocused ? "border-primary/50" : "border-border"
+      } bg-background p-6 shadow-lg ring-1 ring-black/5 dark:ring-white/5`}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onsubmit)}>
@@ -88,25 +87,27 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <TextareaAutosize
-                    {...field}
-                    disabled={isPending}
-                    placeholder="Ask s0 to build..."
-                    className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base resize-none"
-                    minRows={1}
-                    maxRows={8}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        form.handleSubmit(onsubmit)(e);
-                      }
-                    }}
-                  />
+                  <div>
+                    <TextareaAutosize
+                      {...field}
+                      disabled={isPending}
+                      placeholder="Ask ship0 to build..."
+                      className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base resize-none placeholder:tracking-wider"
+                      minRows={2}
+                      maxRows={8}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          form.handleSubmit(onsubmit)(e);
+                        }
+                      }}
+                    />
+                  </div>
                 </FormControl>
 
-                <div className="flex items-center justify-between mt-2 pt-4 border-t border-white/20">
+                <div className="flex items-center justify-between pt-4 border-t border-foreground/10">
                   <div className="flex items-center gap-2">
                     <button
                       type="button"

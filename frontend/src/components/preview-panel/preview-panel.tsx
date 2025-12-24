@@ -39,11 +39,7 @@ interface Message {
 const parseFilesToFileTree = (files: any): FileNode[] => {
   if (!files) return [];
 
-  // If files is already an array of FileNode, return it
   if (Array.isArray(files)) return files;
-
-  // If files is a flat object like { "path/to/file.tsx": { code: "..." } }
-  // Convert to FileNode tree structure
   const fileMap: { [key: string]: any } = files;
   const root: FileNode[] = [];
   let idCounter = 0;
@@ -76,17 +72,14 @@ const parseFilesToFileTree = (files: any): FileNode[] => {
   return root;
 };
 
-// Helper function to get file content from fragment
 const getFileContent = (files: any, path: string[]): string | null => {
   if (!files) return null;
 
   const filePath = path.join("/");
 
-  // If files is an object with file paths as keys
   if (typeof files === "object" && !Array.isArray(files)) {
     const fileData = files[filePath];
     if (fileData) {
-      // Handle different file data structures
       if (typeof fileData === "string") return fileData;
       if (fileData.code) return fileData.code;
       if (fileData.content) return fileData.content;
@@ -185,7 +178,7 @@ const PreviewPanel = ({ projectId }: { projectId: string }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-zinc-950 rounded-lg overflow-hidden border border-zinc-800">
+    <div className="w-full h-full flex flex-col rounded-lg overflow-hidden border border-border">
       <TooltipProvider>
         {/* Header */}
         <PreviewPanelHeader

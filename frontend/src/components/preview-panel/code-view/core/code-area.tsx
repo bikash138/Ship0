@@ -8,11 +8,11 @@ interface CodeAreaProps {
 
 const CodeArea = ({ selectedFileContent, selectedPath }: CodeAreaProps) => {
   return (
-    <div className="flex-1 w-full overflow-auto bg-zinc-950/50">
+    <div className="flex-1 w-full overflow-auto bg-background">
       {selectedFileContent ? (
         <CodeHighlight code={selectedFileContent} lang="javascript" />
       ) : (
-        <div className="flex items-center justify-center h-full text-zinc-500">
+        <div className="flex items-center justify-center h-full text-muted-foreground">
           <div className="text-center">
             <Code size={48} className="mx-auto mb-4 opacity-50" />
             <p>
