@@ -20,7 +20,9 @@ const MessageItem = ({ msg }: { msg: any }) => {
     >
       <div
         className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${
-          isUser ? "" : "bg-amber-100 text-amber-600"
+          isUser
+            ? ""
+            : "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-500"
         }`}
       >
         {isUser ? (
@@ -41,10 +43,10 @@ const MessageItem = ({ msg }: { msg: any }) => {
       {/* Message Content */}
       <div className="flex flex-col gap-2 max-w-[80%]">
         <div
-          className={`relative p-4 rounded-xl text-sm ${
+          className={`relative p-4 text-sm ${
             isUser
-              ? "bg-zinc-900 text-zinc-100 rounded-tr-none"
-              : "bg-transparent text-zinc-400"
+              ? "bg-background text-foreground rounded-2xl rounded-tr-sm border border-border shadow-sm"
+              : "bg-transparent text-zinc-700 dark:text-zinc-400 rounded-xl"
           }`}
         >
           <div
@@ -69,7 +71,7 @@ const MessageItem = ({ msg }: { msg: any }) => {
             <div className="absolute bottom-2 left-0 right-0 flex justify-center z-10">
               <button
                 onClick={() => setIsExpanded(true)}
-                className={`text-xs px-3 py-1 rounded-full shadow-sm hover:bg-opacity-90 transition-all bg-zinc-900 text-gray-300 hover:text-white cursor-pointer`}
+                className={`text-xs px-3 py-1 rounded-full shadow-sm hover:bg-opacity-90 transition-all bg-background text-foreground border border-border hover:border-primary/50 cursor-pointer`}
               >
                 Show more
               </button>

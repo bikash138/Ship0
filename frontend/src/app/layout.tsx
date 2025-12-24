@@ -6,6 +6,8 @@ import { Header } from "@/components/home/Header";
 import QueryProvider from "@/components/query-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper";
+import { ThemeFavicon } from "@/components/theme-favicon";
+import { ThemeTransition } from "@/components/theme-transition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +36,12 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          <ThemeFavicon />
+          <ThemeTransition />
           <ClerkProviderWrapper>
             <QueryProvider>
               <Header />

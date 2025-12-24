@@ -7,7 +7,7 @@ import { useAuth } from "@clerk/nextjs";
 export default function Home() {
   const { isSignedIn } = useAuth();
   return (
-    <div className="bg-secondary-background text-foreground h-screen overflow-y-auto border-2 border-border rounded-md ml-2 mr-2 mb-2 flex flex-col">
+    <div className="bg-secondary-background text-foreground h-screen overflow-y-auto border-2 border-border rounded-md ml-2 mr-2 mb-2 flex flex-col p-2">
       <div className="flex-1">
         <Hero />
         {isSignedIn ? <Projects /> : null}

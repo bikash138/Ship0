@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { ThemeToggle } from "../ui/theme-toggle";
 
 export function ChatHeader({ projectId }: { projectId: string }) {
   const { data: project } = useGetProjectById(projectId);
@@ -49,6 +50,7 @@ export function ChatHeader({ projectId }: { projectId: string }) {
         </div>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           {/* Authentication Buttons */}
           <SignedOut>
             <SignInButton>

@@ -11,7 +11,7 @@ const SandboxFragment = ({ url, title, onClick }: SandboxFragmentProps) => {
     <div className="flex items-center gap-2 mt-3">
       <button
         onClick={onClick}
-        className="flex items-center gap-3 p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors border border-zinc-800 group flex-1"
+        className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-accent transition-colors border border-border group flex-1"
       >
         <div className="w-10 h-10 rounded-md bg-blue-500/10 flex items-center justify-center shrink-0">
           <Box
@@ -20,10 +20,10 @@ const SandboxFragment = ({ url, title, onClick }: SandboxFragmentProps) => {
           />
         </div>
         <div className="flex-1 min-w-0 text-left">
-          <div className="text-sm font-medium text-zinc-100 truncate">
+          <div className="text-sm font-medium text-foreground truncate">
             {title}
           </div>
-          <div className="text-xs text-zinc-500 truncate mt-0.5">
+          <div className="text-xs text-muted-foreground truncate mt-0.5">
             Click to view in code editor
           </div>
         </div>
@@ -32,10 +32,10 @@ const SandboxFragment = ({ url, title, onClick }: SandboxFragmentProps) => {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="p-3 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors border border-zinc-800 shrink-0"
+        className="p-3 bg-background rounded-lg hover:bg-accent transition-colors border border-border shrink-0"
         title="Open in new tab"
       >
-        <ExternalLink size={16} className="text-zinc-400" />
+        <ExternalLink size={16} className="text-muted-foreground" />
       </a>
     </div>
   );

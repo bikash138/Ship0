@@ -46,26 +46,26 @@ const FileTreeItem: React.FC<FileTreeItemProps> = ({
     <div>
       <div
         onClick={handleClick}
-        className="flex items-center gap-2 px-4 py-1.5 hover:bg-zinc-800/50 cursor-pointer transition-colors group"
+        className="flex items-center gap-2 px-4 py-1.5 hover:bg-accent/50 cursor-pointer transition-colors group"
         style={{ paddingLeft: `${level * 16 + 16}px` }}
       >
         {node.type === "folder" && (
-          <span className="text-zinc-500 group-hover:text-zinc-300 transition-colors">
+          <span className="text-muted-foreground group-hover:text-foreground transition-colors">
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </span>
         )}
         {node.type === "folder" ? (
           <Folder
             size={16}
-            className="text-blue-400 group-hover:text-blue-300 transition-colors"
+            className="text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors"
           />
         ) : (
           <File
             size={16}
-            className="text-zinc-400 group-hover:text-zinc-200 transition-colors"
+            className="text-muted-foreground group-hover:text-foreground transition-colors"
           />
         )}
-        <span className="text-sm text-zinc-300 group-hover:text-zinc-100 transition-colors">
+        <span className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">
           {node.name}
         </span>
       </div>
@@ -105,7 +105,7 @@ const FileTree: React.FC<FileTreeProps> = ({ data, onSelect }) => {
 const FileExplorer = ({ fileTree, onSelect }: FileExplorerProps) => {
   return (
     <div className="h-full overflow-y-auto py-2">
-      <div className="px-4 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+      <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
         Explorer
       </div>
       <FileTree data={fileTree} onSelect={onSelect} />

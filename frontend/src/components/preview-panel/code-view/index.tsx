@@ -30,14 +30,14 @@ const CodeView: React.FC<CodeViewProps> = ({
       <ResizablePanel
         defaultSize={20}
         minSize={15}
-        className="bg-zinc-900/50 border-r border-zinc-800"
+        className="bg-background border-r border-border"
       >
         <FileExplorer
           fileTree={fileTree}
           onSelect={(path) => setSelectedPath(path)}
         />
       </ResizablePanel>
-      <ResizableHandle withHandle className="bg-zinc-800" />
+      <ResizableHandle withHandle className="bg-border" />
       <ResizablePanel defaultSize={80}>
         <div className="flex flex-col h-full">
           <BreadcrumbHeader

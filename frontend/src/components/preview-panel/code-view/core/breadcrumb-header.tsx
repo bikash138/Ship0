@@ -28,7 +28,7 @@ const BreadcrumbHeader = ({
   if (selectedPath.length === 0) return null;
 
   return (
-    <div className="h-10 border-b border-zinc-800 flex items-center justify-between px-4 bg-zinc-900/30">
+    <div className="h-10 border-b border-border flex items-center justify-between px-4 bg-background">
       <Breadcrumb>
         <BreadcrumbList>
           {selectedPath.map((item, index) => (
@@ -37,7 +37,7 @@ const BreadcrumbHeader = ({
                 {index === selectedPath.length - 1 ? (
                   <BreadcrumbPage>{item}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink className="hover:text-zinc-200 transition-colors cursor-pointer">
+                  <BreadcrumbLink className="hover:text-foreground transition-colors cursor-pointer">
                     {item}
                   </BreadcrumbLink>
                 )}
@@ -51,7 +51,7 @@ const BreadcrumbHeader = ({
         <TooltipTrigger asChild>
           <button
             onClick={onCopy}
-            className="p-1.5 hover:bg-zinc-800 rounded-md transition-colors text-zinc-400 hover:text-zinc-200"
+            className="p-1.5 hover:bg-accent rounded-md transition-colors text-muted-foreground hover:text-foreground"
           >
             {copied ? (
               <Check size={16} className="text-green-500" />
