@@ -31,7 +31,7 @@ export const Projects = () => {
     console.log(latestProjects);
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-12 px-4 shadow-none flex flex-col items-center justify-center">
+    <div className="w-full max-w-4xl mx-auto mt-12 px-4 shadow-none flex flex-col items-center justify-center p-4">
       <h2 className="text-2xl font-bold mb-6 text-foreground text-center sm:text-left ">
         Recent Projects
       </h2>

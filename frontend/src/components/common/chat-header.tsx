@@ -25,7 +25,9 @@ export function ChatHeader({ projectId }: { projectId: string }) {
     <header className="sticky top-0 z-50 border-white/20 bg-background/95 backdrop-blur">
       <div className="relative flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
           <span>/</span>
 
           <DropdownMenu>

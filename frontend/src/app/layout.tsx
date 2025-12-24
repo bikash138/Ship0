@@ -1,11 +1,11 @@
 import { type Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/home/Header";
-import { dark } from "@clerk/themes";
 import QueryProvider from "@/components/query-provider";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,20 +28,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{ theme: dark }}>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen overflow-hidden`}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen overflow-hidden`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          <QueryProvider>
-            <Header />
-            <main className="flex-1 overflow-hidden h-full flex flex-col">
-              {children}
-            </main>
-            <Toaster />
-          </QueryProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          <ClerkProviderWrapper>
+            <QueryProvider>
+              <Header />
+              <main className="overflow-hidden h-full flex flex-col">
+                {children}
+              </main>
+              <Toaster />
+            </QueryProvider>
+          </ClerkProviderWrapper>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
