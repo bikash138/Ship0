@@ -47,7 +47,11 @@ export const useGetMessages = (projectId: string) => {
     },
     staleTime: 10000,
     refetchInterval: (query) => {
-      return (query.state.data as any[])?.length > 0 ? 5000 : false;
+      const messages = query.state.data as any[];
+      const hasPendingMessage = messages?.some(
+        (msg) => msg.status === "PENDING" || msg.status === "QUEUED"
+      );
+      return hasPendingMessage ? 2000 : false;
     },
   });
 };
@@ -56,11 +60,11 @@ export const useCreateMessage = (projectId: string) => {
   const queryClient = useQueryClient();
   const { getToken } = useAuth();
   return useMutation({
-    mutationFn: async (message: { text: string }) => {
+    mutationFn: async (content: string) => {
       const token = await getToken();
       const response = await axios.post(
         `${URI}/messages/create-message`,
-        { projectId, message },
+        { projectId, content },
         {
           headers: {
             Authorization: `Bearer ${token}`,

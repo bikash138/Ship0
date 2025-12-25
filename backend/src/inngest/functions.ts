@@ -10,7 +10,7 @@ import { z } from "zod";
 import { lastAssistantTextMessageContent } from "./utils";
 import { PROMPT } from "./prompt";
 import { prisma } from "../lib/prisma";
-import { MessageRole, MessageType } from "../../generated/prisma/enums";
+import { MessageType } from "../../generated/prisma/enums";
 
 export const inngest = new Inngest({ id: "ship0" });
 
@@ -23,7 +23,6 @@ const codeAgentFunction = inngest.createFunction(
       const sandbox = await Sandbox.create("ship0-nextjs");
       return sandbox.sandboxId;
     });
-    3;
 
     const codeAgent = createAgent({
       name: "Code Agent",
@@ -172,21 +171,25 @@ const codeAgentFunction = inngest.createFunction(
 
     await step.run('save-result', async()=>{
       if(isError){
-        return await prisma.message.create({
+        return await prisma.message.update({
+          where:{
+            id: event.data.aiMessageId
+          },
           data: {
-            projectId: event.data.projectId,
             content: "Something went wrong",
-            role: MessageRole.ASSISTANT,
-            type: MessageType.ERROR
+            type: MessageType.ERROR,
+            status: "FAILED"
           }
         })
       }
-      return await prisma.message.create({
+      return await prisma.message.update({
+        where: {
+          id: event.data.aiMessageId
+        },
         data: {
-          projectId: event.data.projectId,
           content: result.state.data.summary,
-          role: MessageRole.ASSISTANT,
           type: MessageType.RESULT,
+          status: "SUCCESS",
           fragments: {
             create: {
               sandboxUrl: sandboxUrl,

@@ -7,18 +7,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Spinner } from "@/components/ui/spinner";
 
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 import { ArrowUpIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCreateProject } from "@/hooks/use-project";
 import { useCreateMessage } from "@/hooks/use-messages";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const ProjectFormSchema = z.object({
   content: z
@@ -29,6 +24,7 @@ const ProjectFormSchema = z.object({
 
 const ProjectForm = ({ projectId }: { projectId?: string }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const router = useRouter();
   const createProjectMutation = useCreateProject();
   const createMessageMutation = useCreateMessage(projectId || "");
 
@@ -50,7 +46,7 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
     try {
       if (isChatMode) {
         await createMessageMutation.mutateAsync(
-          { text: data.content },
+          data.content,
           {
             onSuccess: () => {
               form.reset();
@@ -58,12 +54,16 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
           }
         );
       } else {
-        await createProjectMutation.mutateAsync(data.content, {
-          onSuccess: () => {
-            form.reset();
-          },
-        });
-        toast.success("Project Created Success");
+        const newProject = await createProjectMutation.mutateAsync(
+          data.content,
+          {
+            onSuccess: () => {
+              form.reset();
+            },
+          }
+        );
+        router.push(`/chat/${newProject.id}`);
+        toast.success(newProject.message);
       }
     } catch (error) {
       toast.error(
