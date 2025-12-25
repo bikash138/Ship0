@@ -3,6 +3,7 @@ import ProjectForm from "../common/project-form";
 import { motion } from "motion/react";
 import { Jersey_10, Space_Grotesk } from "next/font/google";
 import { QuickActions } from "./QuickActions";
+import { useRef, useState } from "react";
 
 const jersey = Jersey_10({
   weight: "400",
@@ -15,6 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export function Hero() {
+  const[quickPrompt, setQuickPrompt] = useState("")
   return (
     <main className="relative flex flex-col items-center justify-center overflow-hidden mt-10">
       {/* Background S0 text */}
@@ -47,11 +49,11 @@ export function Hero() {
 
         {/* Input box with tools */}
         <div className="min-w-full min-h-fullmax-h-full">
-          <ProjectForm />
+          <ProjectForm initialPrompt={quickPrompt}/>
         </div>
 
         {/* Quick action buttons */}
-        <QuickActions />
+        <QuickActions onQuickActionClick={setQuickPrompt}/>
       </div>
     </main>
   );

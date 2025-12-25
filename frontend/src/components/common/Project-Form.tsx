@@ -28,7 +28,7 @@ const ProjectFormSchema = z.object({
 
 const STORAGE_KEY = "ship0_pending_message";
 
-const ProjectForm = ({ projectId }: { projectId?: string }) => {
+const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialPrompt?: string }) => {
   const [isFocused, setIsFocused] = useState(false);
   const { isSignedIn } = useAuth();
   const router = useRouter();
@@ -48,6 +48,16 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
     },
     mode: "onChange",
   });
+
+  useEffect(()=>{
+    if(initialPrompt){
+      form.setValue("content", initialPrompt, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  },[initialPrompt, form])
 
   useEffect(() => {
     if (isSignedIn) {
@@ -82,7 +92,7 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
           }
         );
         router.push(`/chat/${newProject.id}`);
-        toast.success('Project Created Successfully');
+        toast.success("Project Created Successfully");
       }
     } catch (error) {
       toast.error(

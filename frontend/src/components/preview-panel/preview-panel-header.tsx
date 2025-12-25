@@ -110,7 +110,7 @@ const PreviewPanelHeader = ({
         </div>
 
         {/* Right: Upgrade Button */}
-        <Link href="/#">
+        <Link href="/">
           <Button variant="default">Upgrade</Button>
         </Link>
       </div>

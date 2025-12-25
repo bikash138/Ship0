@@ -17,7 +17,7 @@ export const CodeHighlight = ({ code, lang }: Props) => {
   }, [code]);
 
   return (
-    <pre className="p-2 bg-transparent border-none rouned-none m-0 text-xs">
+    <pre className="p-2 bg-transparent border-none rouned-none m-0 text-[11px] leading-relaxed">
       <code className={`language-${lang}`}>{code}</code>
     </pre>
   );

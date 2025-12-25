@@ -11,12 +11,14 @@ pre[class*='language-'] {
   line-height: 1.5;
   tab-size: 4;
   hyphens: none;
+  background: transparent !important;
 }
 
 /* Light Mode - GitHub Light Theme */
 code[class*='language-'],
 pre[class*='language-'] {
   color: #24292e;
+  background: transparent !important;
 }
 
 .token.comment,
