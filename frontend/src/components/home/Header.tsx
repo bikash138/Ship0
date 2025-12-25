@@ -56,7 +56,11 @@ export function Header() {
             <div className="flex items-center gap-4">
               {/* Social Media Links */}
               <div className="flex items-center gap-4 text-muted-foreground border-white/10 pl-6">
-                <Link href="https://github.com/bikash138" target="_blank">
+                <Link
+                  href="https://github.com/bikash138"
+                  target="_blank"
+                  className="hover:text-foreground transition-color"
+                >
                   <GithubIcon />
                 </Link>
 

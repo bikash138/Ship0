@@ -4,6 +4,7 @@ import { useFragment } from "@/contexts/fragment-context";
 import { User, Bot } from "lucide-react";
 import { useState } from "react";
 import BreathingLoader from "../ui/breathing-loader";
+import Markdown from "../ui/markdown";
 
 const MessageItem = ({ msg }: { msg: any }) => {
   const { user } = useUser();
@@ -12,12 +13,12 @@ const MessageItem = ({ msg }: { msg: any }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isLongMessage = isUser && msg.content && msg.content.length > 300;
   const shouldTruncate = isLongMessage && !isExpanded;
-  const isPending = msg.status === "PENDING" || msg.status === "QUEUED"
+  const isPending = msg.status === "PENDING" || msg.status === "QUEUED";
 
   if (!isUser && isPending) {
     return <BreathingLoader />;
   }
-  
+
   return (
     <div
       className={`flex w-full gap-3 ${
@@ -70,7 +71,7 @@ const MessageItem = ({ msg }: { msg: any }) => {
                 : undefined
             }
           >
-            {msg.content}
+            {isUser ? msg.content : <Markdown content={msg.content || ""} />}
           </div>
 
           {shouldTruncate && isUser && (

@@ -20,7 +20,6 @@ export const Projects = () => {
     return null;
   }
 
-  // Sort by createdAt descending and take top 4
   const latestProjects = [...projects]
     .sort(
       (a, b) =>
@@ -28,7 +27,6 @@ export const Projects = () => {
     )
     .slice(0, 4);
   
-    console.log(latestProjects);
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-12 px-4 shadow-none flex flex-col items-center justify-center p-4">

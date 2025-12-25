@@ -92,9 +92,14 @@ const PreviewPanelHeader = ({
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="p-1 hover:bg-accent rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                  <Link
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`${selectedFragment?.sandboxUrl}`}
+                    className="p-1 hover:bg-accent rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                  >
                     <ExternalLink size={14} />
-                  </button>
+                  </Link>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Open in new tab</p>

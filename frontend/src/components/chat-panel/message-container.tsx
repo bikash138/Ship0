@@ -1,6 +1,5 @@
 "use client";
 import { useGetMessages } from "@/hooks/use-messages";
-import ProjectForm from "../common/project-form";
 import MessageItem from "./message-item";
 
 const MessageContainer = ({ projectId }: { projectId: string }) => {
@@ -23,10 +22,10 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="p-4 shrink-0 bg-background z-10 relative">
+      {/* <div className="p-4 shrink-0 bg-background z-10 relative">
         <div className="absolute top-[-50px] left-0 right-0 h-[50px] bg-linear-to-t from-background to-transparent pointer-events-none" />
         <ProjectForm projectId={projectId} />
-      </div>
+      </div> */}
     </div>
   );
 };
