@@ -26,7 +26,7 @@ export function Header() {
         <ChatHeader projectId={projectId} />
       ) : (
         <header className="sticky top-0 z-50 border-white/20 bg-background/95 backdrop-blur">
-          <div className="relative flex items-center justify-between px-4 py-4">
+          <div className="relative flex items-center justify-between px-4 py-2">
             <Link href="/">
               <Logo />
             </Link>
@@ -53,9 +53,9 @@ export function Header() {
               </nav>
             </SignedOut>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-center gap-2 sm:gap-4">
               {/* Social Media Links */}
-              <div className="flex items-center gap-4 text-muted-foreground border-white/10 pl-6">
+              <div className="hidden sm:flex items-center gap-3 text-muted-foreground border-white/10 pl-4">
                 <Link
                   href="https://github.com/bikash138"
                   target="_blank"
@@ -81,19 +81,23 @@ export function Header() {
               </div>
 
               {/* Theme Toggle */}
-              <ThemeToggle />
+              <div className="flex items-center">
+                <ThemeToggle />
+              </div>
 
               {/* Authentication Buttons */}
               <SignedOut>
                 <SignInButton>
-                  <Button variant={"default"}>Get Started</Button>
+                  <Button
+                    variant={"default"}
+                    className="text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2"
+                  >
+                    Get Started
+                  </Button>
                 </SignInButton>
-                {/* <SignUpButton>
-                  <Button>Sign Up</Button>
-                </SignUpButton> */}
               </SignedOut>
               <SignedIn>
-                <UserButton />
+                  <UserButton />
               </SignedIn>
             </div>
           </div>

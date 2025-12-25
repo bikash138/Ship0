@@ -1,11 +1,12 @@
 "use client";
 import { useGetMessages } from "@/hooks/use-messages";
 import MessageItem from "./message-item";
+import MessageSkeleton from "./message-skeleton";
 
 const MessageContainer = ({ projectId }: { projectId: string }) => {
   const { data: messages, isLoading } = useGetMessages(projectId);
 
-  if (isLoading) return <div className="p-4">Loading messages...</div>;
+  if (isLoading) return <MessageSkeleton />;
 
   return (
     <div className="flex flex-col h-full w-full">

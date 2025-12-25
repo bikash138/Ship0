@@ -15,7 +15,7 @@ const BreathingLoader = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTextIndex((prev) => (prev + 1) % loadingTexts.length);
-    }, 2000); // Change text every 2 seconds
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -35,20 +35,6 @@ const BreathingLoader = () => {
             <span className="animate-pulse">
               {loadingTexts[currentTextIndex]}
             </span>
-            <div className="flex gap-1">
-              <span
-                className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce"
-                style={{ animationDelay: "0ms" }}
-              ></span>
-              <span
-                className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce"
-                style={{ animationDelay: "150ms" }}
-              ></span>
-              <span
-                className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce"
-                style={{ animationDelay: "300ms" }}
-              ></span>
-            </div>
           </div>
         </div>
       </div>

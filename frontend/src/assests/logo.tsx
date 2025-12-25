@@ -20,19 +20,22 @@ export function Logo() {
     setMounted(true);
   }, []);
 
-  // Use resolvedTheme to handle 'system' theme
   const currentTheme = mounted ? resolvedTheme : "dark";
   const isDark = currentTheme === "dark";
 
   return (
-    <div className="flex items-center">
-      <div className={`rounded-sm p-2 ${isDark ? "bg-background" : "bg-background"}`}>
+    <div className="flex items-center gap-1">
+      <div
+        className={`rounded-sm p-2 sm:p-1.5 ${
+          isDark ? "bg-background" : "bg-background"
+        }`}
+      >
         <Image
           src={isDark ? whiteLogo : blackLogo}
           alt="Ship0 Logo"
-          width={32}
-          height={32}
-          className="object-contain"
+          width={44}
+          height={44}
+          className="w-8 h-8 sm:w-9 sm:h-9 object-contain"
         />
       </div>
       <span
