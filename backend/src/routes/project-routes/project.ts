@@ -1,43 +1,60 @@
-import { getAuth } from "@clerk/express";
+import { clerkClient, getAuth } from "@clerk/express";
 import express from "express";
 import { prisma } from "../../lib/prisma";
 import { generateSlug } from "random-word-slugs";
 import { inngest } from "../../inngest/functions";
+import { rateLimiterMiddleware } from "../../lib/rate-limiter-middleware";
 export const projectRoute: express.Router = express.Router();
 
-projectRoute.post("/create-project", async (req, res) => {
+projectRoute.post("/create-project", rateLimiterMiddleware, async (req, res) => {
   try {
     const { userId } = getAuth(req);
     const { content } = req.body;
     if (!userId) {
-      throw new Error("User unautorized");
+      throw new Error("User unauthorized");
     }
     const newProject = await prisma.project.create({
       data: {
         title: generateSlug(4, { format: "kebab" }),
         userId: userId,
         messages: {
-          create: {
-            content: content,
-            role: "USER",
-            type: "RESULT",
-          },
+          create: [
+            {
+              content: content,
+              role: "USER",
+              type: "RESULT",
+              status: "SUCCESS"
+            },
+            {
+              content: "",
+              role: "ASSISTANT",
+              type: "RESULT",
+              status: "PENDING"
+            }
+          ],
         },
       },
+      include: {messages: true}
     });
+
+    const aiMessage = newProject.messages.find(msg => msg.role === "ASSISTANT")
 
     await inngest.send({
       name: "code-agent/build",
       data: {
         value: content,
         projectId: newProject.id,
+        aiMessageId: aiMessage?.id
       },
     });
 
     return res.status(200).json({
       success: true,
       message: "Project Created Success",
-      newProject,
+      newProject: {
+        id: newProject.id,
+        title: newProject.title
+      }
     });
   } catch (error) {
     console.log("Something went wrong while creating Project", error);

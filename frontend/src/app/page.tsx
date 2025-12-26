@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { Projects } from "@/components/home/Projects";
 import { Footer } from "@/components/common/Footer";
 import { useAuth } from "@clerk/nextjs";
+import Pricing from "@/components/home/Pricing";
 
 export default function Home() {
   const { isSignedIn } = useAuth();
@@ -13,6 +14,7 @@ export default function Home() {
         {isSignedIn ? <Projects /> : null}
         {/* <ActionButtons /> */}
       </div>
+      <Pricing/>
       <Footer />
     </div>
   );

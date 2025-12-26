@@ -8,7 +8,7 @@ export const messageRoute: express.Router = express.Router();
 messageRoute.post("/create-message", async (req, res) => {
   try {
     const { userId } = getAuth(req);
-    const { message, projectId } = req.body;
+    const { content, projectId } = req.body;
     if (!userId) {
       throw new Error("User un authorized");
     }
@@ -24,20 +24,33 @@ messageRoute.post("/create-message", async (req, res) => {
       throw new Error(`Project with id ${projectId} not found`);
     }
 
-    const newMessage = await prisma.message.create({
-      data: {
-        projectId: projectId,
-        content: message,
-        role: MessageRole.USER,
-        type: MessageType.RESULT,
-      },
+    const newMessage = await prisma.message.createManyAndReturn({
+      data: [
+        {
+          projectId: projectId,
+          content: content,
+          role: MessageRole.USER,
+          type: MessageType.RESULT,
+          status: "SUCCESS",
+        },
+        {
+          projectId: projectId,
+          content: "",
+          role: MessageRole.ASSISTANT,
+          type: MessageType.RESULT,
+          status: "QUEUED",
+        },
+      ],
     });
+
+    const aiMessage = newMessage.find(msg => msg.role === "ASSISTANT")
 
     inngest.send({
       name: "code-agent/build",
       data: {
-        value: message,
+        value: content,
         projectId: projectId,
+        aiMessageId: aiMessage?.id,
       },
     });
 

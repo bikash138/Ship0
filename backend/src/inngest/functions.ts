@@ -8,9 +8,9 @@ import {
 import { Sandbox } from "@e2b/code-interpreter";
 import { z } from "zod";
 import { lastAssistantTextMessageContent } from "./utils";
-import { PROMPT } from "./prompt";
+import { FRAGMENT_NAME_PROMPT, PROMPT, RESPONSE_PROMPT } from "./prompt";
 import { prisma } from "../lib/prisma";
-import { MessageRole, MessageType } from "../../generated/prisma/enums";
+import { MessageType } from "../../generated/prisma/enums";
 
 export const inngest = new Inngest({ id: "ship0" });
 
@@ -23,7 +23,6 @@ const codeAgentFunction = inngest.createFunction(
       const sandbox = await Sandbox.create("ship0-nextjs");
       return sandbox.sandboxId;
     });
-    3;
 
     const codeAgent = createAgent({
       name: "Code Agent",
@@ -146,13 +145,65 @@ const codeAgentFunction = inngest.createFunction(
       },
     });
 
+    const responseEnhancerAgent = createAgent({
+      name: "Response Enhancer Agent",
+      description: "Enhances the generated task summary",
+      system: RESPONSE_PROMPT,
+      model: openai({
+        model: "gpt-4o-mini",
+        defaultParameters: {
+          temperature: 0.7,
+        },
+      }),
+      tools: [],
+      lifecycle: {
+        onResponse: async ({ result, network }) => {
+          const enhancedSummary = lastAssistantTextMessageContent(result);
+          if (enhancedSummary && network) {
+            network.state.data.enhancedSummary = enhancedSummary;
+          }
+          return result;
+        },
+      },
+    });
+
+    const fragmentNameGeneratorAgent = createAgent({
+      name: "Fragment Name Genrator",
+      description: "Genrates a concise title for the fragment",
+      system: FRAGMENT_NAME_PROMPT,
+      model: openai({
+        model: "gpt-4o-mini",
+        defaultParameters: {
+          temperature: 0.7,
+        },
+      }),
+      tools: [],
+      lifecycle: {
+        onResponse: async ({result, network}) => {
+          const fragmentTitle = lastAssistantTextMessageContent(result);
+          if(fragmentTitle && network){
+            network.state.data.fragmentTitle = fragmentTitle;
+          }
+          return result
+        }
+      }
+    });
+
     const network = createNetwork({
       name: "coding-agent-network",
-      agents: [codeAgent],
+      agents: [codeAgent, responseEnhancerAgent, fragmentNameGeneratorAgent],
       maxIter: 15,
       router: async ({ network }) => {
         const summary = network.state.data.summary;
-        if (summary) {
+        const enhancedSummary = network.state.data.enhancedSummary;
+        const fragmentTitle = network.state.data.fragmentTitle;
+        if (summary && !enhancedSummary) {
+          return responseEnhancerAgent;
+        }
+        if (enhancedSummary && !fragmentTitle) {
+          return fragmentNameGeneratorAgent;
+        }
+        if (enhancedSummary && fragmentTitle) {
           return;
         }
         return codeAgent;
@@ -172,28 +223,33 @@ const codeAgentFunction = inngest.createFunction(
 
     await step.run('save-result', async()=>{
       if(isError){
-        return await prisma.message.create({
+        return await prisma.message.update({
+          where:{
+            id: event.data.aiMessageId
+          },
           data: {
-            projectId: event.data.projectId,
             content: "Something went wrong",
-            role: MessageRole.ASSISTANT,
-            type: MessageType.ERROR
+            type: MessageType.ERROR,
+            status: "FAILED"
           }
         })
       }
-      return await prisma.message.create({
+        const fragmentTitle = result.state.data.fragmentTitle || "Untitled";
+      return await prisma.message.update({
+        where: {
+          id: event.data.aiMessageId,
+        },
         data: {
-          projectId: event.data.projectId,
-          content: result.state.data.summary,
-          role: MessageRole.ASSISTANT,
+          content: result.state.data.enhancedSummary,
           type: MessageType.RESULT,
+          status: "SUCCESS",
           fragments: {
             create: {
               sandboxUrl: sandboxUrl,
-              title: "Untitled",
-              files: result.state.data.files
-            }
-          }
+              title: fragmentTitle,
+              files: result.state.data.files,
+            },
+          },
         },
       });
     })

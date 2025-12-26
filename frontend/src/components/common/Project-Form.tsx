@@ -1,34 +1,38 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import TextareaAutosize from "react-textarea-autosize";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Spinner } from "@/components/ui/spinner";
-
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 import { ArrowUpIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCreateProject } from "@/hooks/use-project";
 import { useCreateMessage } from "@/hooks/use-messages";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import { AxiosError } from "axios";
 
 const ProjectFormSchema = z.object({
   content: z
     .string()
-    .min(4, { message: "Message cannot be empty" })
-    .max(2000, { message: "Content must be at most 2000 characters long" }),
+    .min(10, {
+      message: "Content must be at least 10 characters.",
+    })
+    .max(1000, {
+      message: "Content must not be longer than 500 characters.",
+    }),
 });
 
-const ProjectForm = ({ projectId }: { projectId?: string }) => {
+const STORAGE_KEY = "ship0_pending_message";
+
+const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialPrompt?: string }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
   const createProjectMutation = useCreateProject();
   const createMessageMutation = useCreateMessage(projectId || "");
 
@@ -46,29 +50,68 @@ const ProjectForm = ({ projectId }: { projectId?: string }) => {
     mode: "onChange",
   });
 
+  useEffect(()=>{
+    if(initialPrompt){
+      form.setValue("content", initialPrompt, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  },[initialPrompt, form])
+
+  useEffect(() => {
+    if (isSignedIn) {
+      const storedMessage = localStorage.getItem(STORAGE_KEY);
+      if (storedMessage) {
+        form.setValue("content", storedMessage);
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, [isSignedIn, form]);
+
   const onsubmit = async (data: z.infer<typeof ProjectFormSchema>) => {
+    if (!isSignedIn) {
+      localStorage.setItem(STORAGE_KEY, data.content);
+      router.push("/signin?redirect=home");
+      return;
+    }
     try {
       if (isChatMode) {
-        await createMessageMutation.mutateAsync(
-          { text: data.content },
+        await createMessageMutation.mutateAsync(data.content, {
+          onSuccess: () => {
+            form.reset();
+          },
+        });
+      } else {
+        const newProject = await createProjectMutation.mutateAsync(
+          data.content,
           {
             onSuccess: () => {
               form.reset();
             },
           }
         );
-      } else {
-        await createProjectMutation.mutateAsync(data.content, {
-          onSuccess: () => {
-            form.reset();
-          },
-        });
-        toast.success("Project Created Success");
+        router.push(`/chat/${newProject.id}`);
+        toast.success("Project Created Successfully");
       }
-    } catch (error) {
-      toast.error(
-        isChatMode ? "Failed to send message" : "Project Creation Failed"
-      );
+    } catch (error: any) {
+      if(error.response) {
+        const status = error.response.status
+        const errorData = error.response.data
+        if(status === 429) {
+          toast.error(errorData.error || "Rate limit exceeded", {
+            description: errorData.message,
+            duration: 5000
+          })
+        }
+        else{
+          toast.error(
+            errorData.message || 
+            (isChatMode ? "Failed to send message" : "Project Creation Failed")
+          )
+        }
+      }
       console.log("Error: ", error);
     }
   };
