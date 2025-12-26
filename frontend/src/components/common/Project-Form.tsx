@@ -14,6 +14,7 @@ import { useCreateMessage } from "@/hooks/use-messages";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { AxiosError } from "axios";
 
 const ProjectFormSchema = z.object({
   content: z
@@ -94,10 +95,23 @@ const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialP
         router.push(`/chat/${newProject.id}`);
         toast.success("Project Created Successfully");
       }
-    } catch (error) {
-      toast.error(
-        isChatMode ? "Failed to send message" : "Project Creation Failed"
-      );
+    } catch (error: any) {
+      if(error.response) {
+        const status = error.response.status
+        const errorData = error.response.data
+        if(status === 429) {
+          toast.error(errorData.error || "Rate limit exceeded", {
+            description: errorData.message,
+            duration: 5000
+          })
+        }
+        else{
+          toast.error(
+            errorData.message || 
+            (isChatMode ? "Failed to send message" : "Project Creation Failed")
+          )
+        }
+      }
       console.log("Error: ", error);
     }
   };

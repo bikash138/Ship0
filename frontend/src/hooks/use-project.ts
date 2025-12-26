@@ -43,7 +43,10 @@ export const useCreateProject = () => {
       }
       return response.data.newProject;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["creditUsage"] });
+    },
   });
 };
 

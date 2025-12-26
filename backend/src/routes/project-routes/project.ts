@@ -1,11 +1,12 @@
-import { getAuth } from "@clerk/express";
+import { clerkClient, getAuth } from "@clerk/express";
 import express from "express";
 import { prisma } from "../../lib/prisma";
 import { generateSlug } from "random-word-slugs";
 import { inngest } from "../../inngest/functions";
+import { rateLimiterMiddleware } from "../../lib/rate-limiter-middleware";
 export const projectRoute: express.Router = express.Router();
 
-projectRoute.post("/create-project", async (req, res) => {
+projectRoute.post("/create-project", rateLimiterMiddleware, async (req, res) => {
   try {
     const { userId } = getAuth(req);
     const { content } = req.body;

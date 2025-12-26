@@ -14,6 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChatHeader } from "../common/chat-header";
 import { ThemeToggle } from "../ui/theme-toggle";
+import { CreditUsageDisplay } from "../common/credit-usage-display";
 
 export function Header() {
   const pathname = usePathname();
@@ -97,7 +98,8 @@ export function Header() {
                 </SignInButton>
               </SignedOut>
               <SignedIn>
-                  <UserButton />
+                <CreditUsageDisplay />
+                <UserButton />
               </SignedIn>
             </div>
           </div>

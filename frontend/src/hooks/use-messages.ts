@@ -76,7 +76,9 @@ export const useCreateMessage = (projectId: string) => {
       }
       return response.data.messages;
     },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["messages", projectId] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["messages", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["creditUsage"] });
+    },
   });
 };
