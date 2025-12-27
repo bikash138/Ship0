@@ -1,21 +1,16 @@
 import { getAuth } from "@clerk/express";
 import type { Request, Response, NextFunction } from "express";
-import { consumeCredits } from "./credit-limits";
+import { consumeCredits } from "../services/credit-service";
 
-export async function rateLimiterMiddleware(req: Request,res:Response, next: NextFunction) {
-  try{
-    console.log("Request ENtered the Middleware")
+export async function rateLimiterMiddleware(req: Request, res: Response, next: NextFunction) {
+  try {
     const { userId, has } = getAuth(req);
-    if(!userId){
-      throw new Error("Unathorized")
-    }
     const hasProAccess = has({ plan: "pro" });
-    try{
-      const result = await consumeCredits(userId, hasProAccess)
-      console.log("REsult: ", result)
-      res.setHeader('X-RateLimit-Remaining', result.remainingPoints)
-    } catch(rateLimiterError: any){
-      const plan = hasProAccess ? 'pro' : 'free'
+    try {
+      const result = await consumeCredits(userId!, hasProAccess);
+      res.setHeader("X-RateLimit-Remaining", result.remainingPoints);
+    } catch {
+      const plan = hasProAccess ? "pro" : "free";
       return res.status(429).json({
         success: false,
         error: "Project Creation limit reached",
@@ -26,13 +21,12 @@ export async function rateLimiterMiddleware(req: Request,res:Response, next: Nex
         }`,
       });
     }
-    next()
-  } catch(error){
-    console.log("Rate Limiter middleware Error", error)
+    next();
+  } catch (error) {
+    console.log("Rate Limiter Middleware Error:", error);
     return res.status(500).json({
       success: false,
-      error: "Internal Server Error"
-    })
+      error: "Internal Server Error",
+    });
   }
-
 }

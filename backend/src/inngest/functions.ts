@@ -1,10 +1,5 @@
 import { Inngest } from "inngest";
-import {
-  openai,
-  createAgent,
-  createTool,
-  createNetwork,
-} from "@inngest/agent-kit";
+import { openai, createAgent, createTool, createNetwork } from "@inngest/agent-kit";
 import { Sandbox } from "@e2b/code-interpreter";
 import { z } from "zod";
 import { lastAssistantTextMessageContent } from "./utils";
@@ -85,22 +80,19 @@ const codeAgentFunction = inngest.createFunction(
             ),
           }),
           handler: async ({ files }, { step, network }) => {
-            const newFiles = await step?.run(
-              "createOrUpdateFiles",
-              async () => {
-                try {
-                  const updatedFiles = (await network.state.data.files) || {};
-                  const sandbox = await Sandbox.connect(sandboxId);
-                  for (const file of files) {
-                    await sandbox.files.write(file.path, file.content);
-                    updatedFiles[file.path] = file.content;
-                  }
-                  return updatedFiles;
-                } catch (error) {
-                  return "Error: " + error;
+            const newFiles = await step?.run("createOrUpdateFiles", async () => {
+              try {
+                const updatedFiles = (await network.state.data.files) || {};
+                const sandbox = await Sandbox.connect(sandboxId);
+                for (const file of files) {
+                  await sandbox.files.write(file.path, file.content);
+                  updatedFiles[file.path] = file.content;
                 }
+                return updatedFiles;
+              } catch (error) {
+                return "Error: " + error;
               }
-            );
+            });
             if (typeof newFiles === "object") {
               network.state.data.files = newFiles;
             }
@@ -133,8 +125,7 @@ const codeAgentFunction = inngest.createFunction(
       ],
       lifecycle: {
         onResponse: async ({ result, network }) => {
-          const lastAssistantMessageText =
-            lastAssistantTextMessageContent(result);
+          const lastAssistantMessageText = lastAssistantTextMessageContent(result);
           if (lastAssistantMessageText && network) {
             if (lastAssistantMessageText.includes("<task_summary>")) {
               network.state.data.summary = lastAssistantMessageText;
@@ -179,14 +170,14 @@ const codeAgentFunction = inngest.createFunction(
       }),
       tools: [],
       lifecycle: {
-        onResponse: async ({result, network}) => {
+        onResponse: async ({ result, network }) => {
           const fragmentTitle = lastAssistantTextMessageContent(result);
-          if(fragmentTitle && network){
+          if (fragmentTitle && network) {
             network.state.data.fragmentTitle = fragmentTitle;
           }
-          return result
-        }
-      }
+          return result;
+        },
+      },
     });
 
     const network = createNetwork({
@@ -212,8 +203,7 @@ const codeAgentFunction = inngest.createFunction(
 
     const result = await network.run(event.data.value);
     const isError =
-      !result.state.data.summary ||
-      Object.keys(result.state.data.files || {}).length === 0;
+      !result.state.data.summary || Object.keys(result.state.data.files || {}).length === 0;
 
     const sandboxUrl = await step.run("get-sandbox-url", async () => {
       const sandbox = await Sandbox.connect(sandboxId);
@@ -221,20 +211,20 @@ const codeAgentFunction = inngest.createFunction(
       return `https://${host}`;
     });
 
-    await step.run('save-result', async()=>{
-      if(isError){
+    await step.run("save-result", async () => {
+      if (isError) {
         return await prisma.message.update({
-          where:{
-            id: event.data.aiMessageId
+          where: {
+            id: event.data.aiMessageId,
           },
           data: {
             content: "Something went wrong",
             type: MessageType.ERROR,
-            status: "FAILED"
-          }
-        })
+            status: "FAILED",
+          },
+        });
       }
-        const fragmentTitle = result.state.data.fragmentTitle || "Untitled";
+      const fragmentTitle = result.state.data.fragmentTitle || "Untitled";
       return await prisma.message.update({
         where: {
           id: event.data.aiMessageId,
@@ -252,7 +242,7 @@ const codeAgentFunction = inngest.createFunction(
           },
         },
       });
-    })
+    });
   }
 );
 

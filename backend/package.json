@@ -4,8 +4,13 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
+    "ci": "bun run lint && bun run format:check",
     "inngest": "npx inngest-cli@latest dev -u http://localhost:4000/api/inngest"
   },
   "devDependencies": {
@@ -14,6 +19,12 @@
     "@types/express": "^5.0.6",
     "@types/node": "^24.10.2",
     "@types/pg": "^8.15.6",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.7.4",
     "prisma": "^7.1.0"
   },
   "peerDependencies": {
