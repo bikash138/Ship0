@@ -59,8 +59,8 @@ model Message {
 
 model Fragment {
   id String @id @default(uuid())
-  messsageId String @unique
-  message Message @relation(fields: [messsageId], references: [id], onDelete: Cascade)
+  messageId String @unique
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
   sandboxUrl String
   title String
   files Json

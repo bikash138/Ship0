@@ -1,13 +1,4 @@
-type MessageContent = string | { text: string }[];
-
-interface Message {
-  role: string;
-  content?: MessageContent;
-}
-
-interface AgentResult {
-  output: Message[];
-}
+import type { AgentResult } from "@inngest/agent-kit";
 
 export function lastAssistantTextMessageContent(result: AgentResult) {
   const lastAssistantTextMessageIndex = result.output.findLastIndex(
@@ -16,9 +7,13 @@ export function lastAssistantTextMessageContent(result: AgentResult) {
 
   const message = result.output[lastAssistantTextMessageIndex];
 
-  return message?.content
-    ? typeof message.content === "string"
-      ? message.content
-      : message.content.map((c) => c.text).join("")
-    : undefined;
+  if (!message || !("content" in message) || !message.content) {
+    return undefined;
+  }
+
+  return typeof message.content === "string"
+    ? message.content
+    : Array.isArray(message.content)
+      ? message.content.map((c) => c.text).join("")
+      : undefined;
 }
