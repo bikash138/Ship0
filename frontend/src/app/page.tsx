@@ -1,7 +1,7 @@
 "use client";
 import { Hero } from "@/components/home/Hero";
 import { Projects } from "@/components/home/Projects";
-import { Footer } from "@/components/common/Footer";
+import { Footer } from "@/components/footer";
 import { useAuth } from "@clerk/nextjs";
 import Pricing from "@/components/home/Pricing";
 
