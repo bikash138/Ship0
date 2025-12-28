@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { Logo } from "@/assests/logo";
-import { GithubIcon, LinkedinIcon, XIcon } from "@/assests/social-icons";
+import { Logo } from "@/assets/logo";
+import { GithubIcon, LinkedinIcon, XIcon } from "@/assets/social-icons";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();

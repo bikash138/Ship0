@@ -6,7 +6,7 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
-import { Logo } from "@/assests/logo";
+import { Logo } from "@/assets/logo";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 import { useGetProjectById } from "@/hooks/use-project";

@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { Logo } from "@/assests/logo";
+import { Logo } from "@/assets/logo";
 import { Button } from "../../ui/button";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import Link from "next/link";

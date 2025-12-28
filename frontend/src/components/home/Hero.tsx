@@ -1,5 +1,5 @@
 "use client";
-import ProjectForm from "../common/project-form";
+import ProjectForm from "@/components/common/project-form";
 import { motion } from "motion/react";
 import { Jersey_10, Space_Grotesk } from "next/font/google";
 import { QuickActions } from "./QuickActions";

@@ -1,4 +1,4 @@
-import { GithubIcon, LinkedinIcon, XIcon } from "@/assests/social-icons";
+import { GithubIcon, LinkedinIcon, XIcon } from "@/assets/social-icons";
 
 export const SOCIAL_LINKS = [
   { icon: GithubIcon, href: "https://github.com/bikash138", label: "GitHub" },
