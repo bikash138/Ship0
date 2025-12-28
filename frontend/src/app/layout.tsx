@@ -37,9 +37,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Bikash Shaw" }],
   creator: "Bikash Shaw",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL("https://ship0.bikashdev.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
