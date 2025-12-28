@@ -10,10 +10,16 @@ import { messageRoute } from "./routes/message-routes/messages";
 import { creditRoute } from "./routes/credits-route/credit";
 
 const app = express();
-app.use(clerkMiddleware());
 app.use("/api/v1", clerkWebhookRoute);
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL || "https://ship0.bikashdev.com"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+app.use(clerkMiddleware());
 
 const PORT = process.env.PORT || 4000;
 
