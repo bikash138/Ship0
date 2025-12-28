@@ -1,6 +1,5 @@
 "use client";
 import { PricingTable } from "@clerk/nextjs";
-import { motion } from "motion/react";
 import { Space_Grotesk } from "next/font/google";
 
 const spaceGrotesk = Space_Grotesk({

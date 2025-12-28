@@ -1,13 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Logo } from "@/assests/logo";
-import { Jersey_10 } from "next/font/google";
 import { GithubIcon, LinkedinIcon, XIcon } from "@/assests/social-icons";
-
-const jersey = Jersey_10({
-  weight: "400",
-  subsets: ["latin"],
-});
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -54,7 +48,7 @@ export function Footer() {
         <div className="text-center pb-4">
           <p className="text-muted-foreground text-sm">
             <span className="block sm:inline">
-              © 2025 Ship0. All rights reserved.
+              © {currentYear} Ship0. All rights reserved.
             </span>
             <span className="hidden sm:inline"> | </span>
             <span className="block sm:inline mt-1 sm:mt-0">

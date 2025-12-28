@@ -4,6 +4,7 @@ import { useGetProjects } from "@/hooks/use-project";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { Project } from "@/types";
 
 export const Projects = () => {
   const { data: projects, isLoading } = useGetProjects();
@@ -26,7 +27,6 @@ export const Projects = () => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
     .slice(0, 4);
-  
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-12 px-4 shadow-none flex flex-col items-center justify-center p-4">
@@ -34,13 +34,13 @@ export const Projects = () => {
         Recent Projects
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {latestProjects.map((project: any) => (
+        {latestProjects.map((project: Project) => (
           <Link href={`/chat/${project.id}`} key={project.id}>
             <Card className="bg-card/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-200">
               <CardHeader className="pb-2">
                 <CardTitle
                   className="text-lg font-medium truncate"
-                  title={project.title || project.content}
+                  title={project.title}
                 >
                   {project.title || "Untitled Project"}
                 </CardTitle>

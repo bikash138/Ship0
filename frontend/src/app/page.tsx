@@ -14,7 +14,7 @@ export default function Home() {
         {isSignedIn ? <Projects /> : null}
         {/* <ActionButtons /> */}
       </div>
-      <Pricing/>
+      <Pricing />
       <Footer />
     </div>
   );

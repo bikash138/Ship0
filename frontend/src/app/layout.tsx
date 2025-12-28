@@ -20,8 +20,62 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ship0",
-  description: "Ship0",
+  title: {
+    default: "Ship0 - Build Faster with AI",
+    template: "%s | Ship0",
+  },
+  description:
+    "Ship0 is an AI-powered code generation platform that helps you build web applications faster. Generate frontend projects with a simple prompt.",
+  keywords: [
+    "AI",
+    "code generation",
+    "web development",
+    "frontend",
+    "UI development",
+    "automation",
+    "Ship0",
+  ],
+  authors: [{ name: "Bikash Shaw" }],
+  creator: "Bikash Shaw",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title: "Ship0 - Build Faster with AI",
+    description:
+      "AI-powered code generation platform that helps you build web applications faster. Generate frontend projects with a simple prompt.",
+    siteName: "Ship0",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ship0 - Build Faster with AI",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ship0 - Build Faster with AI",
+    description:
+      "AI-powered frontend code generation platform. Turn prompts into production-ready code with instant live preview. Build UI faster and ship with confidence.",
+    images: ["/og-image.png"],
+    creator: "@Bikash__Shaw",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

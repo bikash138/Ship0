@@ -12,7 +12,7 @@ const jersey = Jersey_10({
 });
 
 export function Logo() {
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch

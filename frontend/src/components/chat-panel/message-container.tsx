@@ -2,6 +2,7 @@
 import { useGetMessages } from "@/hooks/use-messages";
 import MessageItem from "./message-item";
 import MessageSkeleton from "./message-skeleton";
+import { Message } from "@/types";
 
 const MessageContainer = ({ projectId }: { projectId: string }) => {
   const { data: messages, isLoading } = useGetMessages(projectId);
@@ -10,9 +11,8 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
 
   return (
     <div className="flex flex-col h-full w-full">
-      {/* Messages Area - Flex 1 to take available space and scroll */}
       <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-6">
-        {messages?.map((msg: any) => (
+        {messages?.map((msg: Message) => (
           <MessageItem key={msg.id} msg={msg} />
         ))}
         {!messages?.length && (

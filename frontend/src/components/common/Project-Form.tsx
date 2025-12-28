@@ -4,7 +4,6 @@ import { CaretDownIcon } from "@phosphor-icons/react";
 import TextareaAutosize from "react-textarea-autosize";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Spinner } from "@/components/ui/spinner";
 import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 import { ArrowUpIcon } from "lucide-react";
@@ -14,22 +13,18 @@ import { useCreateMessage } from "@/hooks/use-messages";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { AxiosError } from "axios";
-
-const ProjectFormSchema = z.object({
-  content: z
-    .string()
-    .min(10, {
-      message: "Content must be at least 10 characters.",
-    })
-    .max(1000, {
-      message: "Content must not be longer than 500 characters.",
-    }),
-});
+import { projectFormSchema, ProjectFormValues } from "@/utils/validation";
+import axios from "axios";
 
 const STORAGE_KEY = "ship0_pending_message";
 
-const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialPrompt?: string }) => {
+const ProjectForm = ({
+  projectId,
+  initialPrompt,
+}: {
+  projectId?: string;
+  initialPrompt?: string;
+}) => {
   const [isFocused, setIsFocused] = useState(false);
   const { isSignedIn } = useAuth();
   const router = useRouter();
@@ -42,23 +37,23 @@ const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialP
     ? createMessageMutation.isPending
     : createProjectMutation.isPending;
 
-  const form = useForm<z.infer<typeof ProjectFormSchema>>({
-    resolver: zodResolver(ProjectFormSchema),
+  const form = useForm<ProjectFormValues>({
+    resolver: zodResolver(projectFormSchema),
     defaultValues: {
       content: "",
     },
     mode: "onChange",
   });
 
-  useEffect(()=>{
-    if(initialPrompt){
+  useEffect(() => {
+    if (initialPrompt) {
       form.setValue("content", initialPrompt, {
         shouldValidate: true,
         shouldDirty: true,
         shouldTouch: true,
       });
     }
-  },[initialPrompt, form])
+  }, [initialPrompt, form]);
 
   useEffect(() => {
     if (isSignedIn) {
@@ -70,7 +65,7 @@ const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialP
     }
   }, [isSignedIn, form]);
 
-  const onsubmit = async (data: z.infer<typeof ProjectFormSchema>) => {
+  const onSubmit = async (data: ProjectFormValues) => {
     if (!isSignedIn) {
       localStorage.setItem(STORAGE_KEY, data.content);
       router.push("/signin?redirect=home");
@@ -95,22 +90,27 @@ const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialP
         router.push(`/chat/${newProject.id}`);
         toast.success("Project Created Successfully");
       }
-    } catch (error: any) {
-      if(error.response) {
-        const status = error.response.status
-        const errorData = error.response.data
-        if(status === 429) {
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const errorData = error.response.data;
+        if (status === 429) {
           toast.error(errorData.error || "Rate limit exceeded", {
             description: errorData.message,
-            duration: 5000
-          })
-        }
-        else{
+            duration: 5000,
+          });
+        } else {
           toast.error(
-            errorData.message || 
-            (isChatMode ? "Failed to send message" : "Project Creation Failed")
-          )
+            errorData.message ||
+              (isChatMode
+                ? "Failed to send message"
+                : "Project Creation Failed")
+          );
         }
+      } else {
+        toast.error(
+          isChatMode ? "Failed to send message" : "Project Creation Failed"
+        );
       }
       console.log("Error: ", error);
     }
@@ -123,7 +123,7 @@ const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialP
       } bg-background p-6 shadow-lg ring-1 ring-black/5 dark:ring-white/5`}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onsubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="content"
@@ -143,7 +143,7 @@ const ProjectForm = ({ projectId, initialPrompt}: { projectId?: string, initialP
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
-                          form.handleSubmit(onsubmit)(e);
+                          form.handleSubmit(onSubmit)(e);
                         }
                       }}
                     />

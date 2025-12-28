@@ -68,8 +68,6 @@ export const projectService = {
     if (!project) {
       throw new Error("Project not found");
     }
-    return {
-      project,
-    };
+    return project;
   },
 };

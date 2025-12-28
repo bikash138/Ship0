@@ -94,9 +94,24 @@ backend/
 ├── src/
 │   ├── index.ts                  # Application entry point
 │   ├── inngest/
+│   │   ├── agents/               # AI agent definitions
+│   │   │   ├── code-agent.ts                    # Main code generation agent
+│   │   │   ├── response-enhancer-agent.ts       # Summary enhancement agent
+│   │   │   └── fragment-name-generator-agent.ts # Title generation agent
+│   │   ├── handlers/             # Business logic handlers
+│   │   │   ├── result-handler.ts     # Save agent results to database
+│   │   │   └── sandbox-handler.ts    # E2B sandbox management
+│   │   ├── network/              # Agent orchestration
+│   │   │   └── code-agent-network.ts # Multi-agent workflow router
+│   │   ├── tools/                # Agent tools
+│   │   │   ├── file-operations-tool.ts # File create/read operations
+│   │   │   └── terminal-tool.ts        # Terminal command execution
+│   │   ├── types/                # Type definitions
+│   │   │   └── network-types.ts  # Network state and event types
+│   │   ├── config.ts             # Inngest configuration
 │   │   ├── functions.ts          # Inngest function definitions
-│   │   ├── prompt.ts             # AI agent prompts
-│   │   └── utils.ts              # Inngest utilities
+│   │   ├── prompt.ts             # AI agent system prompts
+│   │   └── utils.ts              # Utility functions
 │   ├── lib/
 │   │   ├── prisma.ts             # Prisma client instance
 │   │   └── rate-limiter-middleware.ts  # Rate limiting logic

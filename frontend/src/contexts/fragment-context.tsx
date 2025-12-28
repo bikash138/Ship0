@@ -1,25 +1,14 @@
 "use client";
 
+import { Fragment } from "@/types";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-
-interface Fragment {
-  id: string;
-  messsageId: string;
-  sandboxUrl: string;
-  title: string;
-  files: any;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface FragmentContextType {
   selectedFragment: Fragment | null;
   setSelectedFragment: (fragment: Fragment | null) => void;
 }
 
-const FragmentContext = createContext<FragmentContextType | undefined>(
-  undefined
-);
+const FragmentContext = createContext<FragmentContextType | null>(null);
 
 export const FragmentProvider = ({ children }: { children: ReactNode }) => {
   const [selectedFragment, setSelectedFragment] = useState<Fragment | null>(
@@ -33,9 +22,9 @@ export const FragmentProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useFragment = () => {
+export const useFragment = (): FragmentContextType => {
   const context = useContext(FragmentContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useFragment must be used within a FragmentProvider");
   }
   return context;

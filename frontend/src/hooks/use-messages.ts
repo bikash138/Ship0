@@ -1,32 +1,10 @@
+import { API_ENDPOINTS } from "@/config/api";
+import { CreateMessageResponse, GetMessagesResponse, Message } from "@/types";
 import { useAuth } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-const URI = "http://localhost:4000/api/v1";
-
-export const prefetchMessage = async (
-  projectId: string,
-  queryClient: any,
-  getToken: () => Promise<string | null>
-) => {
-  await queryClient.prefetchQuery({
-    queryKey: ["messages", projectId],
-    queryFn: async () => {
-      const token = await getToken();
-      const response = await axios.get(`${URI}/messages/get-all-messages`, {
-        params: { projectId },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.data.success) {
-        throw new Error("Failed to fetch messages");
-      }
-      return response.data.messages;
-    },
-    staleTime: 10000,
-  });
-};
+const { MESSAGES } = API_ENDPOINTS;
 
 export const useGetMessages = (projectId: string) => {
   const { getToken } = useAuth();
@@ -34,7 +12,7 @@ export const useGetMessages = (projectId: string) => {
     queryKey: ["messages", projectId],
     queryFn: async () => {
       const token = await getToken();
-      const response = await axios.get(`${URI}/messages/get-all-messages`, {
+      const response = await axios.get<GetMessagesResponse>(MESSAGES.GET_ALL, {
         params: { projectId },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -47,7 +25,7 @@ export const useGetMessages = (projectId: string) => {
     },
     staleTime: 10000,
     refetchInterval: (query) => {
-      const messages = query.state.data as any[];
+      const messages = query.state.data as Message[];
       const hasPendingMessage = messages?.some(
         (msg) => msg.status === "PENDING" || msg.status === "QUEUED"
       );
@@ -62,8 +40,8 @@ export const useCreateMessage = (projectId: string) => {
   return useMutation({
     mutationFn: async (content: string) => {
       const token = await getToken();
-      const response = await axios.post(
-        `${URI}/messages/create-message`,
+      const response = await axios.post<CreateMessageResponse>(
+        MESSAGES.CREATE,
         { projectId, content },
         {
           headers: {

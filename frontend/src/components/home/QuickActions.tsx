@@ -51,7 +51,11 @@ const QuickActionButton = ({
   );
 };
 
-export function QuickActions({onQuickActionClick} : {onQuickActionClick: (prompt: string)=>void}) {
+export function QuickActions({
+  onQuickActionClick,
+}: {
+  onQuickActionClick: (prompt: string) => void;
+}) {
   return (
     <div className="flex flex-wrap justify-center gap-3">
       {actions.map((action, index) => (

@@ -5,8 +5,9 @@ import { User, Bot } from "lucide-react";
 import { useState } from "react";
 import BreathingLoader from "../ui/breathing-loader";
 import Markdown from "../ui/markdown";
+import { Message } from "@/types";
 
-const MessageItem = ({ msg }: { msg: any }) => {
+const MessageItem = ({ msg }: { msg: Message }) => {
   const { user } = useUser();
   const { setSelectedFragment } = useFragment();
   const isUser = msg.role === "USER";

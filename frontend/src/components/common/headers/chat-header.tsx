@@ -6,8 +6,8 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
-import { Logo } from "../../assests/logo";
-import { Button } from "../ui/button";
+import { Logo } from "@/assests/logo";
+import { Button } from "../../ui/button";
 import Link from "next/link";
 import { useGetProjectById } from "@/hooks/use-project";
 import {
@@ -17,11 +17,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { ThemeToggle } from "../ui/theme-toggle";
-import { CreditUsageDisplay } from "./credit-usage-display";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { CreditUsageDisplay } from "../credit-usage-display";
+
+const PROJECT_MENU_ITEMS = [
+  { label: "Go to Dashboard", href: "/" },
+  { label: "All Projects", href: "/projects" },
+] as const;
 
 export function ChatHeader({ projectId }: { projectId: string }) {
-  const { data: project } = useGetProjectById(projectId);
+  const { data: project, isLoading, isError } = useGetProjectById(projectId);
 
   return (
     <header className="sticky top-0 z-50 border-white/20 bg-background/95 backdrop-blur">
@@ -34,19 +39,29 @@ export function ChatHeader({ projectId }: { projectId: string }) {
 
           <div className="hidden sm:block">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 sm:gap-2 outline-none min-w-0">
+              <DropdownMenuTrigger
+                className="flex items-center gap-1 sm:gap-2 outline-none min-w-0"
+                aria-label="Project menu"
+              >
                 <span className="font-medium hover:text-foreground/80 transition-colors truncate max-w-[120px] sm:max-w-[200px] md:max-w-[300px] text-sm sm:text-base">
-                  {project?.title || "Loading..."}
+                  {isLoading ? (
+                    <span className="text-muted-foreground">Loading...</span>
+                  ) : isError ? (
+                    <span className="text-destructive">
+                      Error loading project
+                    </span>
+                  ) : (
+                    project?.title || "Untitled Project"
+                  )}
                 </span>
                 <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground shrink-0" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem asChild>
-                  <Link href="/">Go to Dashboard</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/">All Projects</Link>
-                </DropdownMenuItem>
+                {PROJECT_MENU_ITEMS.map((item) => (
+                  <DropdownMenuItem key={item.label} asChild>
+                    <Link href={item.href}>{item.label}</Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

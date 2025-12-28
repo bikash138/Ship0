@@ -1,30 +1,40 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import FileExplorer, { FileNode } from "./core/file-explorer";
 import BreadcrumbHeader from "./core/breadcrumb-header";
 import CodeArea from "./core/code-area";
+import { Fragment } from "@/types";
+import FileExplorer from "./core/file-explorer";
+import { useFileOperations } from "@/hooks/use-file-operation";
 
 interface CodeViewProps {
-  fileTree: FileNode[];
-  selectedPath: string[];
-  setSelectedPath: (path: string[]) => void;
-  selectedFileContent: string | null;
-  copied: boolean;
-  handleCopyFileContent: () => void;
+  selectedFragment: Fragment | null;
 }
 
-const CodeView: React.FC<CodeViewProps> = ({
-  fileTree,
-  selectedPath,
-  setSelectedPath,
-  selectedFileContent,
-  copied,
-  handleCopyFileContent,
-}) => {
+const CodeView: React.FC<CodeViewProps> = memo(({ selectedFragment }) => {
+  const {
+    fileTree,
+    selectedPath,
+    setSelectedPath,
+    selectedFileContent,
+    copied,
+    handleCopyFileContent,
+  } = useFileOperations(selectedFragment);
+
+  if (!fileTree || fileTree.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full text-muted-foreground">
+        <div className="text-center">
+          <p className="text-lg font-medium">No files to display</p>
+          <p className="text-sm">Waiting for code generation...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <ResizablePanelGroup direction="horizontal" className="w-full h-full">
       <ResizablePanel
@@ -53,7 +63,6 @@ const CodeView: React.FC<CodeViewProps> = ({
       </ResizablePanel>
     </ResizablePanelGroup>
   );
-};
+});
 
 export default CodeView;
-export type { FileNode };

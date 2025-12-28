@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
+import { API_ENDPOINTS } from "@/config/api";
+import { GetCreditUsageResponse } from "@/types";
 
-interface CreditUsage {
-  consumed: number;
-  remaining: number;
-  total: number;
-}
-
+const { CREDITS } = API_ENDPOINTS;
 
 export const useCreditUsage = () => {
   const { getToken } = useAuth();
@@ -15,7 +12,7 @@ export const useCreditUsage = () => {
     queryKey: ["creditUsage"],
     queryFn: async () => {
       const token = await getToken();
-      const response = await axios.get("http://localhost:4000/api/v1/credits", {
+      const response = await axios.get<GetCreditUsageResponse>(CREDITS.GET, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,7 +20,7 @@ export const useCreditUsage = () => {
       if (!response.data?.success) {
         throw new Error("Something went wrong while fetching the usage");
       }
-      return response.data.usageData as CreditUsage
+      return response.data.usageData;
     },
   });
 };

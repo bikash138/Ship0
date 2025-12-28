@@ -17,6 +17,7 @@ creditRoute.get("/credits", async (req, res) => {
 
     return res.json({
       success: true,
+      message: "Credits Fetched Successfully",
       usageData: {
         consumed: usage.consumed,
         remaining: usage.remaining,
