@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ClerkProviderWrapper } from "@/components/clerk-provider-wrapper";
 import { ThemeFavicon } from "@/components/theme-favicon";
 import { ThemeTransition } from "@/components/theme-transition";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
@@ -101,6 +102,7 @@ export default function RootLayout({
               <main className="overflow-hidden h-full flex flex-col">
                 {children}
                 <SpeedInsights/>
+                <Analytics/>
               </main>
               <Toaster />
             </QueryProvider>
