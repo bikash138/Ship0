@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 import { prisma } from "../../lib/prisma";
 export const healthRoute: express.Router = express.Router();
 

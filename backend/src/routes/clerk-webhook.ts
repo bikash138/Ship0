@@ -62,7 +62,6 @@ clerkWebhookRoute.post("/webhooks", express.raw({ type: "application/json" }), a
         }
       }
     }
-    console.log("Webhook received");
     return res.send("Webhook received");
   } catch (err) {
     console.error("Error verifying webhook:", err);
