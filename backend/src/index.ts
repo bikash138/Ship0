@@ -8,6 +8,7 @@ import { inngest, functions } from "./inngest/functions";
 import { projectRoute } from "./routes/project-routes/project";
 import { messageRoute } from "./routes/message-routes/messages";
 import { creditRoute } from "./routes/credits-route/credit";
+import { healthRoute } from "./routes/health/health-route";
 
 const app = express();
 app.use("/api/v1", clerkWebhookRoute);
@@ -26,6 +27,7 @@ const PORT = process.env.PORT || 4000;
 app.get("/", async (req, res) => {
   res.send("Welcome to Ship0 server");
 });
+app.use("/api/v1", healthRoute);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/v1/projects", requireAuth(), projectRoute);
 app.use("/api/v1/messages", requireAuth(), messageRoute);
