@@ -3,9 +3,39 @@ import { useGetMessages } from "@/hooks/use-messages";
 import MessageItem from "./message-item";
 import MessageSkeleton from "./message-skeleton";
 import { Message } from "@/types";
+import ProjectForm from "../common/project-form";
+import { useFragment } from "@/contexts/fragment-context";
+import { useEffect, useRef } from "react";
 
 const MessageContainer = ({ projectId }: { projectId: string }) => {
   const { data: messages, isLoading } = useGetMessages(projectId);
+  const { setSelectedFragment } = useFragment();
+  const prevMessagesRef = useRef<Message[]>([]);
+
+  // Auto-select latest fragment when AI response completes
+  useEffect(() => {
+    if (!messages || messages.length === 0) return;
+
+    const prevMessages = prevMessagesRef.current;
+
+    // Find newly completed messages
+    messages.forEach((msg) => {
+      const prevMsg = prevMessages.find((m) => m.id === msg.id);
+
+      // Check if message just completed
+      const wasPending =
+        prevMsg?.status === "PENDING" || prevMsg?.status === "QUEUED";
+      const isNowSuccess = msg.status === "SUCCESS";
+
+      if (wasPending && isNowSuccess && msg.fragments) {
+        // Auto-select the new fragment
+        setSelectedFragment(msg.fragments);
+      }
+    });
+
+    // Update ref
+    prevMessagesRef.current = messages;
+  }, [messages, setSelectedFragment]);
 
   if (isLoading) return <MessageSkeleton />;
 
@@ -23,10 +53,10 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      {/* <div className="p-4 shrink-0 bg-background z-10 relative">
+      <div className="p-4 shrink-0 bg-background z-10 relative">
         <div className="absolute top-[-50px] left-0 right-0 h-[50px] bg-linear-to-t from-background to-transparent pointer-events-none" />
         <ProjectForm projectId={projectId} />
-      </div> */}
+      </div>
     </div>
   );
 };

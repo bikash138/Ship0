@@ -76,6 +76,7 @@ const ProjectForm = ({
         await createMessageMutation.mutateAsync(data.content, {
           onSuccess: () => {
             form.reset();
+            toast.success("Message sent successfully");
           },
         });
       } else {

@@ -37,7 +37,7 @@ export const messageService = {
     const aiMessage = message.find((msg) => msg.role === "ASSISTANT");
 
     inngest.send({
-      name: "code-agent/build",
+      name: "code-agent/edit",
       data: {
         value: data.content,
         projectId: data.projectId,

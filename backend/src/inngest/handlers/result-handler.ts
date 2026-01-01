@@ -4,6 +4,7 @@ import type { NetworkState } from "../types/network-types";
 interface SaveResultParams {
   aiMessageId: string;
   result: { state: { data: NetworkState } };
+  sandboxId: string;
   sandboxUrl: string;
 }
 
@@ -27,6 +28,7 @@ export const saveErrorResult = async (aiMessageId: string) => {
 export const saveSuccessfullResult = async ({
   aiMessageId,
   result,
+  sandboxId,
   sandboxUrl,
 }: SaveResultParams) => {
   const fragmentTitle = result.state.data.fragmentTitle || "Untitled";
@@ -41,6 +43,7 @@ export const saveSuccessfullResult = async ({
       fragments: {
         create: {
           sandboxUrl: sandboxUrl,
+          sandboxId: sandboxId,
           title: fragmentTitle,
           files: result.state.data.files || {},
         },

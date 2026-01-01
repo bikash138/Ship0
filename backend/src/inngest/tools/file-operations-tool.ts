@@ -43,9 +43,44 @@ export const createFileOperationTools = (sandboxId: string) => {
     handler: async ({ files }, { step }) => {
       return await step?.run("readFiles", async () => {
         try {
+          // ✅ Block config files
+          const blockedFiles = [
+            "tailwind.config.js",
+            "tailwind.config.ts",
+            "tailwind.config.cjs",
+            "tailwind.config.mjs",
+            "postcss.config.js",
+            "postcss.config.cjs",
+            "postcss.config.mjs",
+            "next.config.js",
+            "next.config.mjs",
+            "tsconfig.json",
+            "package.json",
+            "package-lock.json",
+            "bun.lockb",
+            ".gitignore",
+            ".env",
+            ".env.local",
+          ];
+
+          // Filter out blocked files
+          const allowedFiles = files.filter((file) => {
+            const fileName = file.split("/").pop() || file;
+            return !blockedFiles.includes(fileName);
+          });
+
+          if (allowedFiles.length === 0) {
+            return JSON.stringify([
+              {
+                error:
+                  "Config files cannot be read. Focus on application code in app/, components/, and lib/ directories.",
+              },
+            ]);
+          }
+
           const sandbox = await Sandbox.connect(sandboxId);
           const contents = [];
-          for (const file of files) {
+          for (const file of allowedFiles) {
             const content = await sandbox.files.read(file);
             contents.push({ path: file, content });
           }

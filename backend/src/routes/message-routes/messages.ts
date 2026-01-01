@@ -1,11 +1,12 @@
 import express from "express";
 import { getAuth } from "@clerk/express";
+import { rateLimiterMiddleware } from "../../lib/rate-limiter-middleware";
 import { createMessageSchema } from "../../schemas/message-schema";
 import { messageService } from "../../services/message-service";
 import z from "zod";
 export const messageRoute: express.Router = express.Router();
 
-messageRoute.post("/create-message", async (req, res) => {
+messageRoute.post("/create-message", rateLimiterMiddleware, async (req, res) => {
   try {
     const { userId } = getAuth(req);
     const validated = createMessageSchema.parse(req.body);
