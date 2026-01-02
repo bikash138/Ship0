@@ -49,6 +49,7 @@ CREATE TABLE "Fragment" (
     "id" TEXT NOT NULL,
     "messageId" TEXT NOT NULL,
     "sandboxUrl" TEXT NOT NULL,
+    "sandboxId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "files" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -83,12 +83,12 @@ export const messageService = {
         },
       },
     });
-    const lastMessageWithFragment = messages.
-    slice().
-    reverse().
-    find(msg => msg.role === "ASSISTANT" && msg.fragments !== null)
+    const lastMessageWithFragment = messages
+      .slice()
+      .reverse()
+      .find((msg) => msg.role === "ASSISTANT" && msg.fragments !== null);
 
-    if(lastMessageWithFragment?.fragments?.id){
+    if (lastMessageWithFragment?.fragments?.id) {
       const fullFragment = await prisma.fragment.findUnique({
         where: {
           id: lastMessageWithFragment.fragments.id,
@@ -102,8 +102,8 @@ export const messageService = {
           sandboxId: true,
         },
       });
-      if(fullFragment){
-        lastMessageWithFragment.fragments = fullFragment
+      if (fullFragment) {
+        lastMessageWithFragment.fragments = fullFragment;
       }
     }
     return messages;
