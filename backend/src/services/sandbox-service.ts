@@ -9,7 +9,7 @@ export const sandboxService = {
       const sandbox = await Sandbox.connect(sandboxId);
       await sandbox.files.list("/");
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
