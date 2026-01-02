@@ -12,28 +12,23 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
   const { setSelectedFragment } = useFragment();
   const prevMessagesRef = useRef<Message[]>([]);
 
-  // Auto-select latest fragment when AI response completes
   useEffect(() => {
     if (!messages || messages.length === 0) return;
 
     const prevMessages = prevMessagesRef.current;
 
-    // Find newly completed messages
     messages.forEach((msg) => {
       const prevMsg = prevMessages.find((m) => m.id === msg.id);
 
-      // Check if message just completed
       const wasPending =
         prevMsg?.status === "PENDING" || prevMsg?.status === "QUEUED";
       const isNowSuccess = msg.status === "SUCCESS";
 
       if (wasPending && isNowSuccess && msg.fragments) {
-        // Auto-select the new fragment
         setSelectedFragment(msg.fragments);
       }
     });
 
-    // Update ref
     prevMessagesRef.current = messages;
   }, [messages, setSelectedFragment]);
 

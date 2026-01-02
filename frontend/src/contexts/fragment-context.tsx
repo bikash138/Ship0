@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment } from "@/types";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface FragmentContextType {
   selectedFragment: Fragment | null;

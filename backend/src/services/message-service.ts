@@ -68,10 +68,44 @@ export const messageService = {
       orderBy: {
         updatedAt: "asc",
       },
-      include: {
-        fragments: true,
+      select: {
+        id: true,
+        content: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        fragments: {
+          select: {
+            id: true,
+            title: true,
+            createdAt: true,
+          },
+        },
       },
     });
+    const lastMessageWithFragment = messages.
+    slice().
+    reverse().
+    find(msg => msg.role === "ASSISTANT" && msg.fragments !== null)
+
+    if(lastMessageWithFragment?.fragments?.id){
+      const fullFragment = await prisma.fragment.findUnique({
+        where: {
+          id: lastMessageWithFragment.fragments.id,
+        },
+        select: {
+          id: true,
+          title: true,
+          sandboxUrl: true,
+          files: true,
+          createdAt: true,
+          sandboxId: true,
+        },
+      });
+      if(fullFragment){
+        lastMessageWithFragment.fragments = fullFragment
+      }
+    }
     return messages;
   },
 };
