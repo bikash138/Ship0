@@ -1,6 +1,7 @@
 import { Project } from "./project-type";
 import { Message } from "./message-type";
 import { CreditUsage } from "./credit-usage-type";
+import { SandboxHealth, SandBoxRecreate } from "./sandbox-types";
 
 export type ApiResponse<T = unknown> = {
   success: boolean;
@@ -19,3 +20,7 @@ export type CreateMessageResponse = ApiResponse<{ messages: Message[] }>;
 
 // Credit response
 export type GetCreditUsageResponse = ApiResponse<{ usageData: CreditUsage }>;
+
+//Sandbox Response
+export type GetHealthRespose = ApiResponse<SandboxHealth>;
+export type RecreateSandboxResponse = ApiResponse<SandBoxRecreate>;

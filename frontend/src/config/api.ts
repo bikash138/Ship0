@@ -14,4 +14,8 @@ export const API_ENDPOINTS = {
   CREDITS: {
     GET: `${BASE_URL}/credits`,
   },
+  SANDBOX: {
+    HEALTH: `${BASE_URL}/sandbox/health`,
+    RECREATE: `${BASE_URL}/sandbox/recreate`,
+  },
 } as const;

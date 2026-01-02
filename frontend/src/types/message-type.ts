@@ -8,6 +8,7 @@ export interface Fragment {
   id: string;
   messageId: string;
   sandboxUrl: string;
+  sandboxId: string;
   title: string;
   files: FileMap;
   createdAt: string;

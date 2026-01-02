@@ -1,14 +1,44 @@
 "use client";
-import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import PreviewPanelHeader from "./preview-panel-header";
 import CodeView from "./code-view";
-import { useFragmentSelection } from "@/hooks/use-fragment-selection";
-import { useFileOperations } from "@/hooks/use-file-operation";
+import { PreviewContent } from "./common/preview-content";
+import { usePreviewPanel } from "./hooks/use-preview-panel";
+import { PreviewPanelProps } from "./types";
 
-const PreviewPanel = ({ projectId }: { projectId: string }) => {
-  const [view, setView] = useState<"code" | "preview">("preview");
-  const { selectedFragment } = useFragmentSelection(projectId);
+/**
+ * PreviewPanel Component
+ *
+ * Main component for displaying project previews and code.
+ * Manages the view state (code/preview) and delegates preview rendering
+ * to the PreviewContent component.
+ *
+ * Features:
+ * - Toggle between code and preview views
+ * - Automatic sandbox health monitoring
+ * - Sandbox recreation on demand
+ * - Loading and error state management
+ *
+ * @param projectId - The ID of the project to preview
+ * @param onPreviewStart - Optional callback when preview starts
+ * @param onPreviewError - Optional callback when preview errors occur
+ * @param onViewChange - Optional callback when view mode changes
+ */
+const PreviewPanel = ({
+  projectId,
+  onPreviewStart,
+  onPreviewError,
+  onViewChange,
+}: PreviewPanelProps) => {
+  const {
+    view,
+    setView,
+    selectedFragment,
+    isCheckingHealth,
+    isRecreating,
+    isSandboxAlive,
+    handleStartPreview,
+  } = usePreviewPanel(projectId, onPreviewStart, onPreviewError, onViewChange);
 
   return (
     <div className="w-full h-full flex flex-col rounded-lg overflow-hidden border border-border">
@@ -25,12 +55,12 @@ const PreviewPanel = ({ projectId }: { projectId: string }) => {
           {view === "code" ? (
             <CodeView selectedFragment={selectedFragment} />
           ) : (
-            <iframe
-              src={selectedFragment?.sandboxUrl}
-              className="w-full h-full border-none bg-white"
-              title="Preview"
-              loading="lazy"
-              sandbox="allow-scripts allow-same-origin"
+            <PreviewContent
+              isCheckingHealth={isCheckingHealth}
+              isRecreating={isRecreating}
+              isSandboxAlive={isSandboxAlive}
+              selectedFragment={selectedFragment}
+              onStartPreview={handleStartPreview}
             />
           )}
         </div>

@@ -9,6 +9,7 @@ import { projectRoute } from "./routes/project-routes/project";
 import { messageRoute } from "./routes/message-routes/messages";
 import { creditRoute } from "./routes/credits-route/credit";
 import { healthRoute } from "./routes/health/health-route";
+import { sandboxRoute } from "./routes/sandbox-routes/sandbox";
 
 const app = express();
 app.use("/api/v1", clerkWebhookRoute);
@@ -31,6 +32,7 @@ app.use("/api/v1", healthRoute);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/v1/projects", requireAuth(), projectRoute);
 app.use("/api/v1/messages", requireAuth(), messageRoute);
+app.use("/api/v1/sandbox", requireAuth(), sandboxRoute);
 app.use("/api/v1", requireAuth(), creditRoute);
 
 app.listen(PORT, () => {

@@ -11,7 +11,9 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
   const { data: messages, isLoading } = useGetMessages(projectId);
   const { setSelectedFragment } = useFragment();
   const prevMessagesRef = useRef<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null); // ← ADD THIS: Ref for scroll target
 
+  // Existing effect for fragment selection
   useEffect(() => {
     if (!messages || messages.length === 0) return;
 
@@ -32,6 +34,12 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
     prevMessagesRef.current = messages;
   }, [messages, setSelectedFragment]);
 
+  // ← ADD THIS: Auto-scroll effect
+  useEffect(() => {
+    // Scroll to bottom whenever messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   if (isLoading) return <MessageSkeleton />;
 
   return (
@@ -45,6 +53,8 @@ const MessageContainer = ({ projectId }: { projectId: string }) => {
             No messages yet. Start the conversation!
           </div>
         )}
+        {/* ← ADD THIS: Invisible div at the end to scroll to */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area - Fixed at bottom */}

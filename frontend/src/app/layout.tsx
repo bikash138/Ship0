@@ -101,8 +101,8 @@ export default function RootLayout({
               <Header />
               <main className="overflow-hidden h-full flex flex-col">
                 {children}
-                <SpeedInsights/>
-                <Analytics/>
+                <SpeedInsights />
+                <Analytics />
               </main>
               <Toaster />
             </QueryProvider>

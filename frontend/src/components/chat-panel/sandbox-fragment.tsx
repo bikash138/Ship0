@@ -3,10 +3,16 @@ import { Box, ExternalLink } from "lucide-react";
 interface SandboxFragmentProps {
   url: string;
   title: string;
+  createdAt?: string;
   onClick?: () => void;
 }
 
-const SandboxFragment = ({ url, title, onClick }: SandboxFragmentProps) => {
+const SandboxFragment = ({
+  url,
+  title,
+  createdAt,
+  onClick,
+}: SandboxFragmentProps) => {
   return (
     <div className="flex items-center gap-2 mt-3">
       <button
@@ -24,7 +30,15 @@ const SandboxFragment = ({ url, title, onClick }: SandboxFragmentProps) => {
             {title}
           </div>
           <div className="text-xs text-muted-foreground truncate mt-0.5">
-            Click to view in code editor
+            {createdAt
+              ? `Created ${new Date(createdAt).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}`
+              : "Click to view in code editor"}
           </div>
         </div>
       </button>

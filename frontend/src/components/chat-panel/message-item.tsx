@@ -75,6 +75,16 @@ const MessageItem = ({ msg }: { msg: Message }) => {
             {isUser ? msg.content : <Markdown content={msg.content || ""} />}
           </div>
 
+          {isUser && (
+            <div className="text-[10px] text-muted-foreground mt-1 text-right">
+              {new Date(msg.createdAt).toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </div>
+          )}
+
           {shouldTruncate && isUser && (
             <div className="absolute bottom-2 left-0 right-0 flex justify-center z-10">
               <button
@@ -92,6 +102,7 @@ const MessageItem = ({ msg }: { msg: Message }) => {
           <SandboxFragment
             url={msg.fragments.sandboxUrl}
             title={msg.fragments.title}
+            createdAt={msg.fragments.createdAt}
             onClick={() => {
               setSelectedFragment(msg.fragments);
             }}
