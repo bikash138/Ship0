@@ -36,14 +36,26 @@ export const messageService = {
 
     const aiMessage = message.find((msg) => msg.role === "ASSISTANT");
 
-    inngest.send({
-      name: "code-agent/edit",
-      data: {
-        value: data.content,
-        projectId: data.projectId,
-        aiMessageId: aiMessage?.id,
-      },
-    });
+    try {
+      await inngest.send({
+        name: "code-agent/edit",
+        data: {
+          value: data.content,
+          projectId: data.projectId,
+          aiMessageId: aiMessage?.id,
+        },
+      });
+    } catch (error) {
+      console.log("Failed to invoke code-agent/edit function:", error);
+      await prisma.message.update({
+        where: { id: aiMessage?.id },
+        data: {
+          status: "FAILED",
+          content: "Failed to process your request. Please try again.",
+          type: "ERROR",
+        },
+      });
+    }
     return {
       message,
     };
