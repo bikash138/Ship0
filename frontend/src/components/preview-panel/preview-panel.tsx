@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import PreviewPanelHeader from "./preview-panel-header";
 import CodeView from "./code-view";

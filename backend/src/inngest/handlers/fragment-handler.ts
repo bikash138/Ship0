@@ -34,8 +34,5 @@ export const fetchLatestFragmentByProjectId = async (projectId: string) => {
       title: true,
     },
   });
-  if (!fragment) {
-    throw new Error("Fragment Not Found");
-  }
   return fragment;
 };

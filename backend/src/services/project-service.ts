@@ -21,7 +21,7 @@ export const projectService = {
               content: "",
               role: "ASSISTANT",
               type: "RESULT",
-              status: "PENDING",
+              status: "QUEUED",
             },
           ],
         },
@@ -31,14 +31,26 @@ export const projectService = {
 
     const aiMessage = project.messages.find((msg) => msg.role === "ASSISTANT");
 
-    await inngest.send({
-      name: "code-agent/build",
-      data: {
-        value: data.content,
-        projectId: project.id,
-        aiMessageId: aiMessage?.id,
-      },
-    });
+    try {
+      await inngest.send({
+        name: "code-agent/build",
+        data: {
+          value: data.content,
+          projectId: project.id,
+          aiMessageId: aiMessage?.id,
+        },
+      });
+    } catch (error) {
+      console.log("Failed to invoke code-agent function:", error);
+      await prisma.message.update({
+        where: { id: aiMessage?.id },
+        data: {
+          status: "FAILED",
+          content: "Failed to process your request. Please try again.",
+          type: "ERROR",
+        },
+      });
+    }
 
     return {
       id: project.id,

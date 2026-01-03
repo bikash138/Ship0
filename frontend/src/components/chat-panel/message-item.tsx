@@ -15,6 +15,7 @@ const MessageItem = ({ msg }: { msg: Message }) => {
   const isLongMessage = isUser && msg.content && msg.content.length > 300;
   const shouldTruncate = isLongMessage && !isExpanded;
   const isPending = msg.status === "PENDING" || msg.status === "QUEUED";
+  const isError = msg.status === "FAILED";
 
   if (!isUser && isPending) {
     return <BreathingLoader />;
@@ -54,7 +55,9 @@ const MessageItem = ({ msg }: { msg: Message }) => {
           className={`relative p-4 text-sm ${
             isUser
               ? "bg-background text-foreground rounded-2xl rounded-tr-sm border border-border shadow-sm"
-              : "bg-transparent text-zinc-700 dark:text-zinc-400 rounded-xl"
+              : isError
+                ? "bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30 rounded-xl"
+                : "bg-transparent text-zinc-700 dark:text-zinc-400 rounded-xl"
           }`}
         >
           <div
@@ -72,7 +75,16 @@ const MessageItem = ({ msg }: { msg: Message }) => {
                 : undefined
             }
           >
-            {isUser ? msg.content : <Markdown content={msg.content || ""} />}
+            {isUser ? (
+              msg.content
+            ) : isError ? (
+              <div className="flex items-start gap-2">
+                <span className="mt-0.5">⚠️</span>
+                <span>{msg.content || "Something went wrong"}</span>
+              </div>
+            ) : (
+              <Markdown content={msg.content || ""} />
+            )}
           </div>
 
           {isUser && (
