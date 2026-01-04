@@ -43,26 +43,27 @@ const PublicHeader = () => {
 
         <div className="flex items-center justify-center gap-2 sm:gap-4">
           {/* Social Media Links */}
-          <div className="hidden sm:flex items-center gap-3 text-muted-foreground border-white/10 pl-4">
-            {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
-              <Link
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors"
-                aria-label={label}
-              >
-                <Icon />
-              </Link>
-            ))}
-          </div>
-
-          {/* Theme Toggle */}
-          <ThemeToggle />
+          <SignedOut>
+            <div className="hidden sm:flex items-center gap-3 text-muted-foreground border-white/10 pl-4">
+              {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                  aria-label={label}
+                >
+                  <Icon />
+                </Link>
+              ))}
+            </div>
+          </SignedOut>
 
           {/* Authentication Buttons */}
           <SignedOut>
+            {/* Theme Toggle */}
+            <ThemeToggle />
             <SignInButton>
               <Button
                 variant={"default"}
@@ -74,6 +75,7 @@ const PublicHeader = () => {
           </SignedOut>
           <SignedIn>
             <CreditUsageDisplay />
+            <ThemeToggle />
             <UserButton />
           </SignedIn>
         </div>

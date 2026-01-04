@@ -148,18 +148,33 @@
   background: transparent;
 }
 
+/* Light mode scrollbar */
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46; /* zinc-700 approximation */
+  background: #d4d4d8; /* zinc-300 for light mode */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b; /* zinc-600 */
+  background: #a1a1aa; /* zinc-400 for light mode */
 }
 
-/* Firefox */
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46; /* zinc-700 for dark mode */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #52525b; /* zinc-600 for dark mode */
+}
+
+/* Firefox - Light mode */
 * {
   scrollbar-width: thin;
+  scrollbar-color: #d4d4d8 transparent;
+}
+
+/* Firefox - Dark mode */
+.dark * {
   scrollbar-color: #3f3f46 transparent;
 }
 

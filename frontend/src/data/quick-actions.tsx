@@ -30,7 +30,7 @@ export const actions: QuickAction[] = [
     icon: <Film size={18} />,
     label: "Netflix Clone",
     prompt:
-      "Create a Netflix-style streaming platform clone with a hero banner, multiple content rows, hover effects on thumbnails, video player interface, and responsive design. Include categories like Trending, Popular, and New Releases.",
+      "Create a Netflix-style streaming platform with a hero banner featuring a movie, multiple horizontal content rows with movie cards, and hover effects on thumbnails. Include categories like Trending, Popular, and New Releases. Make it responsive.",
   },
   {
     icon: <User size={18} />,
