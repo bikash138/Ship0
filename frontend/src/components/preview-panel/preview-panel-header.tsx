@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Fragment } from "@/types";
 import { ViewToggleButton } from "./common/view-toggle-button";
 import { SandboxUrlBar } from "./common/sandbox-url-bar";
+import { usePlans } from "@clerk/nextjs/experimental";
 
 interface PreviewPanelHeaderProps {
   view: "code" | "preview";
@@ -17,6 +18,9 @@ const PreviewPanelHeader = ({
   setView,
   selectedFragment,
 }: PreviewPanelHeaderProps) => {
+  const { data: plans, isLoading } = usePlans();
+  const hasPro = plans?.some((plan) => plan.name === "PRO");
+
   return (
     <TooltipProvider>
       <div className="h-14 border-b border-border flex items-center justify-between px-4 bg-background">
@@ -40,10 +44,14 @@ const PreviewPanelHeader = ({
         {/* Center: URL Bar */}
         <SandboxUrlBar url={selectedFragment?.sandboxUrl} />
 
-        {/* Right: Upgrade Button */}
-        <Link href="/">
-          <Button variant="default">Upgrade</Button>
-        </Link>
+        {/* Right: Upgrade Button or Spacer */}
+        {!isLoading && !hasPro ? (
+          <Link href="/">
+            <Button variant="default">Upgrade</Button>
+          </Link>
+        ) : (
+          <div className="w-[88px]" /> 
+        )}
       </div>
     </TooltipProvider>
   );

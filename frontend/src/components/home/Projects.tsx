@@ -33,10 +33,14 @@ export const Projects = () => {
       <h2 className="text-2xl font-bold mb-6 text-foreground text-center sm:text-left ">
         Recent Projects
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="flex flex-wrap justify-center gap-4 w-full">
         {latestProjects.map((project: Project) => (
-          <Link href={`/chat/${project.id}`} key={project.id}>
-            <Card className="bg-card/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-200">
+          <Link
+            href={`/chat/${project.id}`}
+            key={project.id}
+            className="w-full sm:w-auto"
+          >
+            <Card className="bg-card/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-200 w-full sm:w-[240px]">
               <CardHeader className="pb-2">
                 <CardTitle
                   className="text-lg font-medium truncate"

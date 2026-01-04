@@ -68,9 +68,8 @@ export function ChatHeader({ projectId }: { projectId: string }) {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 shrink-0">
-          <ThemeToggle />
-          {/* Authentication Buttons */}
           <SignedOut>
+            <ThemeToggle />
             <SignInButton>
               <Button
                 variant={"outline"}
@@ -87,6 +86,7 @@ export function ChatHeader({ projectId }: { projectId: string }) {
           </SignedOut>
           <SignedIn>
             <CreditUsageDisplay />
+            <ThemeToggle />
             <UserButton />
           </SignedIn>
         </div>
