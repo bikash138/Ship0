@@ -11,5 +11,5 @@ RUN bunx prisma generate
 
 COPY src ./src/
 
-EXPOSE 4000
+EXPOSE 4001
 CMD ["bun", "run", "start"]
