@@ -1,6 +1,5 @@
 const BASE_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000/api/v1";
-
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:40001/api/v1";
 export const API_ENDPOINTS = {
   PROJECTS: {
     CREATE: `${BASE_URL}/projects/create-project`,

@@ -13,9 +13,10 @@ import { sandboxRoute } from "./routes/sandbox-routes/sandbox";
 
 const app = express();
 app.use("/api/v1", clerkWebhookRoute);
+const FRONTEND_URL = process.env.FRONTEND_URL;
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL || "https://ship0.bikashdev.com"],
+    origin: FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   })
 );
@@ -23,7 +24,7 @@ app.use(
 app.use(express.json());
 app.use(clerkMiddleware());
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 
 app.get("/", async (req, res) => {
   res.send("Welcome to Ship0 server");
@@ -36,5 +37,5 @@ app.use("/api/v1/sandbox", requireAuth(), sandboxRoute);
 app.use("/api/v1", requireAuth(), creditRoute);
 
 app.listen(PORT, () => {
-  console.log(`Ship0 backend in up at PORT: ${PORT}`);
+  console.log(`Ship0 backend in up at PORT: ${PORT} and Frontend URL: ${FRONTEND_URL}`);
 });
