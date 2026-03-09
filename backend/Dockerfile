@@ -31,7 +31,7 @@ COPY --from=prisma /app/generated ./generated
 COPY . .
 
 # Expose port
-EXPOSE 4000
+EXPOSE 4001
 
 # Run the application
 CMD ["bun", "run", "start"]
