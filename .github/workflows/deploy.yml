@@ -11,37 +11,37 @@ jobs:
     environment: production
 
     steps:
-    - name: 📥 Checkout repository
-      uses: actions/checkout@v3
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
 
-    - name: 🔐 Setup SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-keyscan -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+      - name: 🔐 Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.VPS_PORT }} ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-    - name: 🚀 SSH into VPS and deploy
-      run: |
-        ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-        cd ~/Ship0/backend
+      - name: 🚀 SSH into VPS and deploy
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          cd ~/Ship0/backend
 
-        echo "🔄 Fetching latest code safely..."
-        git fetch origin main
-        git reset --hard origin/main
+          echo "🔄 Fetching latest code safely..."
+          git fetch origin main
+          git reset --hard origin/main
 
-        echo "👇 Try to build first, without stopping current app"
-        docker compose build
+          echo "👇 Try to build first, without stopping current app"
+          docker compose build
 
-        # ✅ Only stop and restart if build succeeded
-        if [ $? -eq 0 ]; then
-          echo "✅ Build succeeded! Restarting app..."
-          docker compose down
-          docker compose up -d
-          echo "✅ Deployment complete!"
-        else
-          echo "❌ Build failed! Keeping old app running."
-          docker compose logs
-          exit 1
-        fi
-        EOF
+          # ✅ Only stop and restart if build succeeded
+          if [ $? -eq 0 ]; then
+            echo "✅ Build succeeded! Restarting app..."
+            docker compose down
+            docker compose up -d
+            echo "✅ Deployment complete!"
+          else
+            echo "❌ Build failed! Keeping old app running."
+            docker compose logs
+            exit 1
+          fi
+          EOF

@@ -10,6 +10,7 @@ import { messageRoute } from "./routes/message-routes/messages";
 import { creditRoute } from "./routes/credits-route/credit";
 import { healthRoute } from "./routes/health/health-route";
 import { sandboxRoute } from "./routes/sandbox-routes/sandbox";
+import { prisma } from "./lib/prisma";
 
 const app = express();
 app.use("/api/v1", clerkWebhookRoute);
@@ -20,6 +21,17 @@ app.use(
     credentials: true,
   })
 );
+
+async function pingDB() {
+  try {
+    await prisma.$queryRawUnsafe("SELECT 1");
+    console.log("Database connection is healthy");
+  } catch (error) {
+    console.error("Database connection failed:", error);
+  }
+}
+
+pingDB();
 
 app.use(express.json());
 app.use(clerkMiddleware());
